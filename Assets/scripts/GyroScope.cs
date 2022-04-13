@@ -9,7 +9,7 @@ public class GyroScope : MonoBehaviour
     Rigidbody rb;
     Text x;
     Text y;
-    float speed=0.05f; 
+    float speed=0.01f; 
     bool isBorder;
     bool isTri;
     Transform xText;
@@ -34,18 +34,22 @@ public class GyroScope : MonoBehaviour
         pos = this.gameObject.transform.position;
         x.text=" X:"+(int)(pos.x);
         y.text="Y:"+(int)(pos.y);
-        Capsule.transform.Rotate(0,-Input.gyro.rotationRateUnbiased.y*1,0);
-        Vector3 angleAcceler = Input.acceleration;      
+        
+        //Vector3 gyroEuler = Input.gyro.attitude.eulerAngles;
+        Capsule.transform.Rotate(0,-Input.gyro.rotationRate.z*1.5f,0);
+        //Capsule.transform.rotation=new Quaternion(0,Input.gyro.attitude.y*0.5f,0,-Input.gyro.attitude.w*0.5f);
+        
+     
     }
     void FixedUpdate()
     {
         StropToWall();
         AddRigidbody();
-        if(Input.gyro.userAcceleration.y>0.2&&!isBorder)
+           if(Input.gyro.userAcceleration.y>0.2&&!isBorder)
         {
             Capsule.transform.Translate(-speed,0,0);
            
-        }
+        }      
         if(isTri)
         {
             panel = GameObject.Find("Canvas").transform.Find("DefectUpdateBtn");

@@ -31,7 +31,7 @@ public class QRDecodeTest : MonoBehaviour
 	public void qrScanFinished(string dataText)
 	{
         Debug.Log(dataText);
-
+		Debug.Log(isOpenBrowserIfUrl);
 		if (isOpenBrowserIfUrl) {
 			if (Utility.CheckIsUrlFormat(dataText))
 			{
@@ -39,7 +39,7 @@ public class QRDecodeTest : MonoBehaviour
 				{
 					dataText = "http://" + dataText;
 				}
-				Application.OpenURL(dataText);
+				//Application.OpenURL(dataText);
 				GotoNextScene("Test");
 			}
 		}

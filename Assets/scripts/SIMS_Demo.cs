@@ -916,4 +916,17 @@ public class SIMS_Demo : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    public void Back()
+    {
+       Transform back = GameObject.Find("Canvas").transform.Find("panel_Inspection");
+        back.gameObject.SetActive(false);
+    }
+    public void UpdateBack()
+    {
+        Transform Updateback = GameObject.Find("Canvas").transform.Find("panel_InspectionUpdate");
+        
+        Updateback.gameObject.SetActive(false);
+        
+    }
 }
