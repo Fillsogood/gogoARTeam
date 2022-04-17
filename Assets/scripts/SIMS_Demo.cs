@@ -61,24 +61,24 @@ public class SIMS_Demo : MonoBehaviour
     {
         Screen.SetResolution(360, 700, false);
 
-        // GameObject panelObj = GameObject.Find("panel_console");
-        // RectTransform rt = panelObj.GetComponent<RectTransform>();
+        GameObject panelObj = GameObject.Find("panel_console");
+        RectTransform rt = panelObj.GetComponent<RectTransform>();
 
-        // ta_left = rt.offsetMin.x;
-        // //ta_right = -rt.offsetMax.x;
-        // ta_top = -rt.offsetMax.y;
-        // //ta_bottom = rt.offsetMin.y;
-        // ta_width = rt.rect.width;
-        // ta_height = rt.rect.height;
+        ta_left = rt.offsetMin.x;
+        //ta_right = -rt.offsetMax.x;
+        ta_top = -rt.offsetMax.y;
+        //ta_bottom = rt.offsetMin.y;
+        ta_width = rt.rect.width;
+        ta_height = rt.rect.height;
 
-        // Debug.Log("LEFT : " + ta_left);
-        // Debug.Log("TOP : " + ta_top);
-        // Debug.Log("WIDTH : " + ta_width);
-        // Debug.Log("HEIGHT : " + ta_height);
+        Debug.Log("LEFT : " + ta_left);
+        Debug.Log("TOP : " + ta_top);
+        Debug.Log("WIDTH : " + ta_width);
+        Debug.Log("HEIGHT : " + ta_height);
 
-        // GameObject.Find("ifServerIP").GetComponent<InputField>().text = "192.168.";
-        // GameObject.Find("ifServerPort").GetComponent<InputField>().text = "8080";
-        // GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
+        GameObject.Find("ifServerIP").GetComponent<InputField>().text = "192.168.";
+        GameObject.Find("ifServerPort").GetComponent<InputField>().text = "8080";
+        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
 
         if (Application.platform == RuntimePlatform.Android)
         {
@@ -91,13 +91,12 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        string ip = "192.168.0.8";
-        string port = "8080";
-        Debug.Log(ip);
-        Debug.Log(port);
+        string ip = GameObject.Find("ifServerIP").GetComponent<InputField>().text.ToString();
+        string port = GameObject.Find("ifServerPort").GetComponent<InputField>().text.ToString();
+
         if (ip == "" || port == "")
         {
-            SimsLog("IP �� Port �Է��ϼ���. ������ ����� �� ���� �ֽ��ϴ�.");
+            SimsLog("IP 및 Port 입력하세요. 서버와 통신을 할 수가 있습니다.");
         }
         else
         {
@@ -279,7 +278,7 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataInspection();
 
         string uri = "inspection/" + _Ins.ins_id.ToString();
-        //form-data(image, key/value) ���� ��������
+        //form-data(image, key/value) 동시 가져오기
         StartCoroutine(this.GetMultipartformImage(uri));
     }
 
@@ -288,7 +287,7 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataInspection();
 
         string uri = "inspection/" + _Ins.ins_id.ToString();
-        //form-data(image, key/value) ����
+        //form-data(image, key/value) 삭제
         StartCoroutine(this.Delete(uri)); 
     }
 
@@ -297,7 +296,7 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataModel();
 
         var json = JsonConvert.SerializeObject(_model);
-        StartCoroutine(this.Post("model", "", json)); //�߰�
+        StartCoroutine(this.Post("model", "", json)); //추가
     }
 
     public void OnClick_ModelSelect()
@@ -313,7 +312,7 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataModel();
 
         var json = JsonConvert.SerializeObject(_model);
-        StartCoroutine(this.Post("model", _model.model_id.ToString(), json)); //�߰�
+        StartCoroutine(this.Post("model", _model.model_id.ToString(), json)); //추가
     }
 
     public void OnClick_ModelDelete()
@@ -321,52 +320,13 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataModel();
 
         string uri = "model/" + _model.model_id.ToString();
-        StartCoroutine(this.Delete(uri, "model")); //�������� 1����
+        StartCoroutine(this.Delete(uri, "model")); //가져오기 1개만
     }
 
     public void OnClick_ModelGetAll()
     {
         UpdateDataModel();
         StartCoroutine(this.GetAll("model")); 
-    }
-
-    private void Test()
-    {
-        //Company data = new Company();
-        //data.companyId = 18;
-        //data.name = "�ƺ���";
-        //data.address = "�����̸� �����";
-
-        //var json = JsonConvert.SerializeObject(data);
-        //StartCoroutine(this.Post("company", json)); //�߰�
-        //StartCoroutine(this.Get("employee/2")); //�������� 1����
-
-        //������Ʈ
-        //StartCoroutine(this.Post("employee/19", json)); //�������� 1����
-
-        //����
-        //StartCoroutine(this.Delete("employee/19")); //�������� 1����
-
-        //��ü ��������
-        //StartCoroutine(this.GetAll("employee")); //�������� 1����
-        //StartCoroutine(this.GetImage("image/5")); //�������� 1����
-
-
-        //form-data(image, key/value) ���� ���ε� ����
-        //StartCoroutine(PostFormData("inspection", "C:/Users/Administrator/Desktop/lovely.jpg"));
-        
-        //form-data(image, key/value) ���� ��������
-        //StartCoroutine(this.GetMultipartformImage("inspection/1000"));
-        //File.WriteAllBytes("d:/simsreality.jpg", ins.image);
-
-        //form-data(image, key/value) ������Ʈ
-        //StartCoroutine(PostFormData("inspection/1000", "C:/Users/Administrator/Desktop/1.png"));
-
-        //form-data(image, key/value) ����
-        //StartCoroutine(this.Delete("inspection/4000")); 
-
-        //form-data(image, key/value) all
-        //StartCoroutine(this.GetAll("inspection"));
     }
 
     IEnumerator CheckPermissionAndroid()
@@ -385,14 +345,14 @@ public class SIMS_Demo : MonoBehaviour
 
             if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite) == false)
             {
-                //���̾�α׸� ���� ������ �÷������� ����߾���. �� �ڵ�� �ּ� ó����.
-                //AGAlertDialog.ShowMessageDialog("���� �ʿ�", "��ũ������ �����ϱ� ���� ����� ������ �ʿ��մϴ�.",
+                //다이얼로그를 위해 별도의 플러그인을 사용했었다. 이 코드는 주석 처리함.
+                //AGAlertDialog.ShowMessageDialog("권한 필요", "스크린샷을 저장하기 위해 저장소 권한이 필요합니다.",
                 //"Ok", () => OpenAppSetting(),
-                //"No!", () => AGUIMisc.ShowToast("����� ��û ������"));
+                //"No!", () => AGUIMisc.ShowToast("저장소 요청 거절됨"));
 
-                // ������ Ȯ�� �˾��� ����� �������� OpenAppSetting()�� �ٷ� ȣ����.
+                // 별도로 확인 팝업을 띄우지 않을꺼면 OpenAppSetting()을 바로 호출함.
                 //OpenAppSetting();
-                SimsLog("����� ������ �ʿ���.");
+                SimsLog("저장소 권한이 필요함.");
                 yield break;
             }
         }
@@ -418,7 +378,7 @@ public class SIMS_Demo : MonoBehaviour
         image.sprite = sprite;
     }
 
-    //�̹����� ������Ʈ ��.
+    //이미지만 업데이트 함.
     private IEnumerator PostFormImage(string uri, string id, string path_image)
     {
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
@@ -430,8 +390,8 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            SimsLog("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
-            Debug.Log("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
+            SimsLog("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
+            Debug.Log("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
 
             yield break; ;
         }
@@ -450,11 +410,11 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            SimsLog("jpg, png ���ϸ� ������ �����մϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
+            SimsLog("jpg, png 파일만 전송이 가능합니다. 다시 확인바랍니다.!!");
             yield break;
         }
 
-        SimsLog("���� ��� : " + path_image);
+        SimsLog("파일 경로 : " + path_image);
 
         formData.Add(new MultipartFormFileSection("file", img, Path.GetFileName(path_image), strImgformat));
 
@@ -464,16 +424,16 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ������Ʈ �����߽��ϴ�. " + www.responseCode);
+            SimsLog("점검 ID " + _Ins.ins_id.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
         {
-            SimsLog("���� ID " + _Ins.ins_id.ToString() + " �̹����� ���������� ������Ʈ�� �Ǿ����ϴ�. " + www.responseCode);
+            SimsLog("점검 ID " + _Ins.ins_id.ToString() + " 이미지가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             Debug.Log("Request Response: " + www.downloadHandler.text);
         }
     }
-    //Inspection �����͸� ������Ʈ
+    //Inspection 데이터만 업데이트
     private IEnumerator PostFormData(string uri, string id)
     {
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
@@ -485,8 +445,8 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            SimsLog("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
-            Debug.Log("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
+            SimsLog("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
+            Debug.Log("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
 
             yield break;;
         }
@@ -505,20 +465,20 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ������Ʈ �����߽��ϴ�. " + www.responseCode);
+            SimsLog("점검 ID " + _Ins.ins_id.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
         {
-            SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ���������� ������Ʈ�� �Ǿ����ϴ�. " + www.responseCode);
+            SimsLog("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             Debug.Log("Request Response: " + www.downloadHandler.text);
 
-            //���ε尡 �Ϸ�Ǹ� ���� Ŭ�����Ѵ�.
+            //업로드가 완료되면 폼을 클리어한다.
             //ClearDataInsepction();
         }
     }
 
-    //�̹����� Inspection ���� �� ������Ʈ
+    //이미지와 Inspection 삽입 및 업데이트
     private IEnumerator PostFormDataImage(string uri, string id, string path_image)
     {
         //SimsLog("PostFormDataImage");
@@ -532,8 +492,8 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            SimsLog("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
-            Debug.Log("���� ID�� �Է��Ͻñ� �ٶ��ϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
+            SimsLog("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
+            Debug.Log("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
 
             yield break;;
         }
@@ -562,13 +522,13 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            SimsLog("jpg, png ���ϸ� ������ �����մϴ�. �ٽ� Ȯ�ιٶ��ϴ�.!!");
+            SimsLog("jpg, png 파일만 전송이 가능합니다. 다시 확인바랍니다.!!");
             yield break;
         }
 
         //SimsLog("PostFormDataImage:MultipartFormFileSection");
-        //SimsLog("���� ��� : " + path_image);
-        //SimsLog("����  : " + img.ToString());
+        //SimsLog("파일 경로 : " + path_image);
+        //SimsLog("파일  : " + img.ToString());
 
         formData.Add(new MultipartFormFileSection("file", img, Path.GetFileName(path_image), strImgformat));
 
@@ -581,7 +541,7 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ������ �����߽��ϴ�. " + www.responseCode);
+            SimsLog("점검 ID " + _Ins.ins_id.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
@@ -589,28 +549,28 @@ public class SIMS_Demo : MonoBehaviour
             if (id == "")
             {
                 //Debug.Log("Form upload complete!");
-                SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ���������� Upload(����) �Ǿ����ϴ�. " + www.responseCode);
+                SimsLog("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
             }
             else
             {
-                SimsLog("���� ID " + _Ins.ins_id.ToString() + "�� ���������� ������Ʈ�� �Ǿ����ϴ�. " + www.responseCode);
+                SimsLog("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             }
 
             Debug.Log("Request Response: " + www.downloadHandler.text);
 
-            //���ε尡 �Ϸ�Ǹ� ���� Ŭ�����Ѵ�.
+            //업로드가 완료되면 폼을 클리어한다.
             ClearDataInspection();
         }
     }
 
     #region POST
-    //bodyraw post �����ϴ� �����.
+    //bodyraw post 전송하는 방법임.
     private IEnumerator Post(string uri, string id, string data)
     {
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
         Debug.Log(url);
         Debug.Log(data);
-        //POST������� http������ ��û�� �����ڽ��ϴ�.
+        //POST방식으로 http서버에 요청을 보내겠습니다.
         var request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
         //Debug.Log(bodyRaw.Length);
@@ -618,18 +578,18 @@ public class SIMS_Demo : MonoBehaviour
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
  
-        //������ ��ٸ��ϴ�.
+        //응답을 기다립니다.
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            SimsLog("�� ID " + _model.model_id.ToString() + "�� ���ۿ� �����߽��ϴ�. " + request.responseCode);
+            SimsLog("모델 ID " + _model.model_id.ToString() + "이 전송에 실패했습니다. " + request.responseCode);
             Debug.Log(request.error);
         }
         else
         {
 
-            //������ �޾ҽ��ϴ�.
+            //응답을 받았습니다.
             //Debug.Log(request.downloadHandler.data);
             Debug.Log(request.downloadHandler.text);
             _model = (Model)JsonConvert.DeserializeObject<Model>(request.downloadHandler.text);
@@ -638,16 +598,16 @@ public class SIMS_Demo : MonoBehaviour
             if (id == "")
             {
                 //Debug.Log("Form upload complete!");
-                SimsLog("�� ID " + _model.model_id.ToString() + "�� ���������� Upload(����) �Ǿ����ϴ�. " + request.responseCode);
+                SimsLog("모델 ID " + _model.model_id.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + request.responseCode);
             }
             else
             {
-                SimsLog("�� ID " + _model.model_id.ToString() + "�� ���������� ������Ʈ�� �Ǿ����ϴ�. " + request.responseCode);
+                SimsLog("모델 ID " + _model.model_id.ToString() + "가 성공적으로 업데이트가 되었습니다. " + request.responseCode);
             }
 
             Debug.Log("Request Response: " + request.downloadHandler.text);
 
-            //���ε尡 �Ϸ�Ǹ� ���� Ŭ�����Ѵ�.
+            //업로드가 완료되면 폼을 클리어한다.
             ClearDataModel();
         }
  
@@ -656,11 +616,11 @@ public class SIMS_Demo : MonoBehaviour
 
 
     #region IMAGE_GET
-    private IEnumerator GetImage(string uri) // �̹��� �ϳ��� ���� ���
+    private IEnumerator GetImage(string uri) // 이미지 하나만 받을 경우
     {
         string token = "";
 
-        //http������ ��û 
+        //http서버에 요청 
         var url = string.Format("{0}/{1}", serverPath, uri);
         Debug.Log(url);
 
@@ -676,17 +636,17 @@ public class SIMS_Demo : MonoBehaviour
 
             yield return request.SendWebRequest();
 
-            //http�����κ��� ������ �޾Ҵ�. 
+            //http서버로부터 응답을 받았다. 
             if (request.isNetworkError || request.isHttpError)
             {
                 Debug.Log(request.error);
             }
             else
             {
-                //����� ���ڿ��� ��� 
+                //결과를 문자열로 출력 
                 //Debug.Log(request.downloadHandler.text);
 
-                /* ������ �̹����� ���Ϸ� ����. ���������� �� �޾������� Ȯ���� ���� �ӽ� �ڵ���.
+                /* 서버의 이미지를 파일로 저장. 정상적으로 잘 받아지는지 확인을 위한 임시 코드임.
                 try
                 {
                     byte[] results = request.downloadHandler.data;
@@ -718,7 +678,7 @@ public class SIMS_Demo : MonoBehaviour
     #region GETMULTIPARTFORM_IMAGE
     private IEnumerator GetMultipartformImage(string uri)
     {
-        //http������ ��û 
+        //http서버에 요청 
         var url = string.Format("{0}/{1}", serverPath, uri);
         Debug.Log(url);
 
@@ -727,34 +687,34 @@ public class SIMS_Demo : MonoBehaviour
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
 
-            //http������ ���� ������ ��� 
+            //http서버로 부터 응답을 대기 
             yield return www.SendWebRequest();
 
-            //http�����κ��� ������ �޾Ҵ�. 
+            //http서버로부터 응답을 받았다. 
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
-                SimsLog("���� ID�� ���ų� �������� ���� �������Դϴ�. Ȯ���Ͻñ� �ٶ��ϴ�.!!");
+                SimsLog("점검 ID가 없거나 존재하지 않은 데이터입니다. 확인하시기 바랍니다.!!");
             }
             else
             {
-                //����� ���ڿ��� ��� 
+                //결과를 문자열로 출력 
                 //Debug.Log(www.downloadHandler.text);
 
-                //���̳ʸ� �����͸� ���� 
+                //바이너리 데이터를 복구 
                 byte[] results = www.downloadHandler.data;
 
                 Debug.Log(results.Length);  //14 
 
                 var message = Encoding.UTF8.GetString(results);
 
-                Debug.Log(message);     //�����ߴ�.!
+                Debug.Log(message);     //응답했다.!
 
                 Inspection ins = (Inspection)JsonConvert.DeserializeObject<Inspection>(message);
                 if (ins != null)
                 {
                     _Ins = ins;
-                    SimsLog("���� ID : " + _Ins.ins_id.ToString() + " ��ȸ �Ǿ����ϴ�.");
+                    SimsLog("점검 ID : " + _Ins.ins_id.ToString() + " 조회 되었습니다.");
                     UpdateDataForm();
 
                     //File.WriteAllBytes("d:/sims.jpg", _Ins.image);
@@ -762,7 +722,7 @@ public class SIMS_Demo : MonoBehaviour
                 }
                 else
                 {
-                    SimsLog("�����͸� �������� ���߽��ϴ�. ID�� Ȯ���ϼ���.");
+                    SimsLog("데이터를 가져오지 못했습니다. ID를 확인하세요.");
                 }
             }
         }
@@ -772,34 +732,34 @@ public class SIMS_Demo : MonoBehaviour
     #region GET
     private IEnumerator Get(string uri = "")
     {
-        //http������ ��û 
+        //http서버에 요청 
         var url = string.Format("{0}/{1}", serverPath, uri);
         Debug.Log(url);
  
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
-            //http������ ���� ������ ��� 
+            //http서버로 부터 응답을 대기 
             yield return www.SendWebRequest();
  
-            //http�����κ��� ������ �޾Ҵ�. 
+            //http서버로부터 응답을 받았다. 
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
-                SimsLog("�� ID : " + _model.model_id.ToString() + " ��ȸ �����߽��ϴ�.");
+                SimsLog("모델 ID : " + _model.model_id.ToString() + " 조회 실패했습니다.");
             }
             else
             {
-                //����� ���ڿ��� ��� 
+                //결과를 문자열로 출력 
                 Debug.Log(www.downloadHandler.text);
  
-                //���̳ʸ� �����͸� ���� 
+                //바이너리 데이터를 복구 
                 byte[] results = www.downloadHandler.data;
  
                 Debug.Log(results.Length);  //14 
  
                 var message = Encoding.UTF8.GetString(results);
  
-                Debug.Log(message);     //�����ߴ�.!
+                Debug.Log(message);     //응답했다.!
 
                 //var result = JsonConvert.DeserializeObject<Model>(message);
                 //Debug.LogFormat("{0}, {1}, {2}", result.CompanyId, result.name, result.address);
@@ -809,11 +769,11 @@ public class SIMS_Demo : MonoBehaviour
                 {
                     _model = model;
                     UpdateDataFormModel();
-                    SimsLog("�� ID : " + _model.model_id.ToString() + " ��ȸ �Ǿ����ϴ�.");
+                    SimsLog("모델 ID : " + _model.model_id.ToString() + " 조회 되었습니다.");
                 }
                 else
                 {
-                    SimsLog("�����͸� �������� ���߽��ϴ�. ID�� Ȯ���ϼ���.");
+                    SimsLog("데이터를 가져오지 못했습니다. ID를 확인하세요.");
                 }
             }
         }
@@ -823,35 +783,35 @@ public class SIMS_Demo : MonoBehaviour
     #region GETALL
     private IEnumerator GetAll(string uri = "")
     {
-        //http������ ��û 
+        //http서버에 요청 
         var url = string.Format("{0}/{1}", serverPath, uri);
         Debug.Log(url);
 
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
-            //http������ ���� ������ ��� 
+            //http서버로 부터 응답을 대기 
             yield return www.SendWebRequest();
 
-            //http�����κ��� ������ �޾Ҵ�. 
+            //http서버로부터 응답을 받았다. 
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
             }
             else
             {
-                //����� ���ڿ��� ��� 
+                //결과를 문자열로 출력 
                 Debug.Log(www.downloadHandler.text);
 
-                //���̳ʸ� �����͸� ���� 
+                //바이너리 데이터를 복구 
                 byte[] results = www.downloadHandler.data;
 
                 Debug.Log(results.Length);  //14 
 
                 var message = Encoding.UTF8.GetString(results);
 
-                Debug.Log(message);     //�����ߴ�.!
+                Debug.Log(message);     //응답했다.!
 
-                /*var result //Inspection ��ü ����Ʈ�� �˰� ������ �Ʒ��� Ǯ�� ����ϸ� ��.
+                /*var result //Inspection 전체 리스트를 알고 싶으면 아래를 풀고 사용하면 됨.
                 List<Inspection> list = JsonConvert.DeserializeObject<List<Inspection>>(message);
                 foreach (Inspection c in list)
                 {
@@ -872,35 +832,35 @@ public class SIMS_Demo : MonoBehaviour
     #region DELETE
     private IEnumerator Delete(string uri, string type = "ins")
     {
-        //http������ ��û 
+        //http서버에 요청 
         var url = string.Format("{0}/{1}", serverPath, uri);
         Debug.Log(url);
 
         using (UnityWebRequest www = UnityWebRequest.Delete(url))
         {
-            //http������ ���� ������ ��� 
+            //http서버로 부터 응답을 대기 
             yield return www.SendWebRequest();
-            //http�����κ��� ������ �޾Ҵ�. 
+            //http서버로부터 응답을 받았다. 
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log(www.error);
                 if (type == "ins")
-                    SimsLog("���� ID : " + _Ins.ins_id.ToString() + " ������ �����߽��ϴ�.");
+                    SimsLog("점검 ID : " + _Ins.ins_id.ToString() + " 삭제가 실패했습니다.");
                 else
-                    SimsLog("�� ID : " + _model.model_id.ToString() + " ������ �����߽��ϴ�.");
+                    SimsLog("모델 ID : " + _model.model_id.ToString() + " 삭제가 실패했습니다.");
             }
             else
-            { //����
-                //����� ���ڿ��� ��� 
+            { //성공
+                //결과를 문자열로 출력 
                 //Debug.Log("deleted !!");
                 if (type == "ins")
                 {
-                    SimsLog("���� ID : " + _Ins.ins_id.ToString() + " ���� �Ǿ����ϴ�.");
+                    SimsLog("점검 ID : " + _Ins.ins_id.ToString() + " 삭제 되었습니다.");
                     ClearDataInspection();
                 }
                 else
                 {
-                    SimsLog("�� ID : " + _model.model_id.ToString() + " ���� �Ǿ����ϴ�.");
+                    SimsLog("모델 ID : " + _model.model_id.ToString() + " 삭제 되었습니다.");
                     ClearDataModel();
                 }
             }
@@ -910,14 +870,13 @@ public class SIMS_Demo : MonoBehaviour
 
     public void OnQuit()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+    #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+    #else
+            Application.Quit();
+    #endif
     }
-
-    public void Back()
+       public void Back()
     {
        Transform back = GameObject.Find("Canvas").transform.Find("panel_Inspection");
         back.gameObject.SetActive(false);
@@ -930,3 +889,4 @@ public class SIMS_Demo : MonoBehaviour
         
     }
 }
+
