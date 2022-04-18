@@ -59,30 +59,8 @@ public class SIMS_Demo : MonoBehaviour
 
     void Start()
     {
-        Screen.SetResolution(360, 700, false);
-
-        GameObject panelObj = GameObject.Find("panel_console");
-        RectTransform rt = panelObj.GetComponent<RectTransform>();
-
-        ta_left = rt.offsetMin.x;
-        //ta_right = -rt.offsetMax.x;
-        ta_top = -rt.offsetMax.y;
-        //ta_bottom = rt.offsetMin.y;
-        ta_width = rt.rect.width;
-        ta_height = rt.rect.height;
-
-        Debug.Log("LEFT : " + ta_left);
-        Debug.Log("TOP : " + ta_top);
-        Debug.Log("WIDTH : " + ta_width);
-        Debug.Log("HEIGHT : " + ta_height);
-
-        GameObject.Find("ifServerIP").GetComponent<InputField>().text = "192.168.";
-        GameObject.Find("ifServerPort").GetComponent<InputField>().text = "8080";
-        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
-
         if (Application.platform == RuntimePlatform.Android)
-        {
-            GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
+        {  
 
             StartCoroutine("CheckPermissionAndroid");
         }
@@ -91,8 +69,8 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        string ip = GameObject.Find("ifServerIP").GetComponent<InputField>().text.ToString();
-        string port = GameObject.Find("ifServerPort").GetComponent<InputField>().text.ToString();
+        string ip = "localhost";
+        string port = "8080";
 
         if (ip == "" || port == "")
         {
@@ -101,6 +79,7 @@ public class SIMS_Demo : MonoBehaviour
         else
         {
             serverPath = "http://" + ip + ":" + port;
+            Debug.Log(serverPath);
         }
     }
 
@@ -250,7 +229,7 @@ public class SIMS_Demo : MonoBehaviour
         UpdateDataInspection();
 
         SimsLog("Inspection Insert : " + _Ins.image_name);
-        StartCoroutine(PostFormDataImage("inspection", "", _Ins.image_name));
+        StartCoroutine(PostFormDataImage("inspection", "insert", _Ins.image_name));
     }
 
     public void OnClick_InsUpdate()
@@ -484,11 +463,12 @@ public class SIMS_Demo : MonoBehaviour
         //SimsLog("PostFormDataImage");
 
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
+        Debug.Log(url);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         if (_Ins.ins_id > -1)
         {
-            formData.Add(new MultipartFormDataSection("ins_id", _Ins.ins_id.ToString()));
+            formData.Add(new MultipartFormDataSection("model_idx", _Ins.ins_id.ToString()));
         }
         else
         {
@@ -498,8 +478,8 @@ public class SIMS_Demo : MonoBehaviour
             yield break;;
         }
 
-        formData.Add(new MultipartFormDataSection("ins_date", _Ins.ins_date != "" ? _Ins.ins_date:"-1"));
-        formData.Add(new MultipartFormDataSection("inspector", _Ins.inspector != "" ? _Ins.inspector : "-1"));
+        // formData.Add(new MultipartFormDataSection("ins_date", _Ins.ins_date != "" ? _Ins.ins_date:"-1"));
+        formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector != "" ? _Ins.inspector : "-1"));
         formData.Add(new MultipartFormDataSection("damage_type", _Ins.damage_type > -1 ? _Ins.damage_type.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_object", _Ins.damage_object != "" ? _Ins.damage_object : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x > -1 ? _Ins.damage_loc_x.ToString() : "-1"));
