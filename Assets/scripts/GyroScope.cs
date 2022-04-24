@@ -15,12 +15,10 @@ public class GyroScope : MonoBehaviour
     Transform xText;
     Transform yText;
     Transform panel;
-    float rotLeftRight, rotTopBottom;
+    
     Vector3 m_PlayerRot;
-    private float TimeLeft = 1.0f;
-    private float nextTime = 0.0f;
-    private float time;
-    List<float> data = new List<float>();
+
+    
 
       void Start()
     {
@@ -95,11 +93,7 @@ public class GyroScope : MonoBehaviour
         }
     }
 
-      void MoveMoles()
-    {
-        Debug.Log(data.Count);
-        data.Clear();
-    }
+    
     double average()
     {
         double[] arr = new double[98]; //가속도 센서 1초 평균 98개의 데이터 추출
@@ -116,21 +110,6 @@ public class GyroScope : MonoBehaviour
         return result /= arr.Length;
     }
 
-    double average2()
-    {
-        double[] arr = new double[65]; //자이로 센서 1초 평균 65개의 데이터 추출
-        double result = 0;
-
-        for(int i=0;i<arr.Length;i++)
-        {
-            arr[i] = m_PlayerRot.y; 
-        }
-        for(int i=0;i<arr.Length;i++)
-        {
-            result += arr[i];
-        }
-        return result /= arr.Length;
-    }
 
      void gyroupdate()
 	{   

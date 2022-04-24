@@ -37,8 +37,13 @@ public class QRDecodeTest : MonoBehaviour
 			{
 				if (!dataText.Contains("http://") && !dataText.Contains("https://"))
 				{
-					dataText = "http://" + dataText;
+					//dataText = "http://" + dataText;
+
+					var msg = dataText.Split('/');
+					dataText= msg[2];
 				}
+				dataText = "1"; //   <================================================================= 여기에 마커 모델 숫자 들어와야함 숫자만
+				SingletonModelIdx.instance.ModelIdx =Convert.ToInt32(dataText);
 				//Application.OpenURL(dataText);
 				GotoNextScene("Test");
 			}

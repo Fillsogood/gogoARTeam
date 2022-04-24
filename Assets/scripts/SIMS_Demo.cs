@@ -21,19 +21,30 @@ public class Model
 [System.Serializable]
 public class Inspection
 {
-	public int ins_id;
-	public string ins_date;
-	public string inspector;
+	public int idx;
+    public int model_idx;
+    public string inspector_name;
+    public string admin_name;
 	public int damage_type;
 	public int damage_object;
 	public float damage_loc_x;
 	public float damage_loc_y;
 	public float damage_loc_z;
+	public string ins_date;
+    public string admin_date;
     public string inspector_etc;
-	public string image_name;
-	public string image_size;
-	public string image_type;
-	public byte[] image; 
+    public string admin_etc;
+    public int state;
+	public string ins_image_name;
+	public string ins_image_url;
+	public string ins_image_size;
+	public string ins_image_type;
+	public byte[] ins_bytes; 
+    public string ad_image_name;
+	public string ad_image_url;
+	public string ad_image_size;
+	public string ad_image_type;
+	public byte[] ad_bytes;
 
 }
 
@@ -126,17 +137,10 @@ public class SIMS_Demo : MonoBehaviour
     {
         UpdateServerIpPort();
 
-        try
-        {
-            _Ins.ins_id = Convert.ToInt32(GameObject.Find("ifInsID").GetComponent<InputField>().text.ToString());
-        }
-        catch (FormatException)
-        {
-            _Ins.ins_id = -1;
-        }
+        _Ins.model_idx = SingletonModelIdx.instance.ModelIdx;
         _Ins.ins_date = GameObject.Find("ifInsDate").GetComponent<InputField>().text.ToString();
-        _Ins.inspector = GameObject.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
-         _Ins.inspector_etc = GameObject.Find("ifinspector_etc").GetComponent<InputField>().text.ToString();
+        _Ins.inspector_name = GameObject.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
+        _Ins.inspector_etc = GameObject.Find("ifinspector_etc").GetComponent<InputField>().text.ToString();
         
         try
         {
@@ -184,29 +188,29 @@ public class SIMS_Demo : MonoBehaviour
 
         if (Application.platform == RuntimePlatform.Android)
         {
-            _Ins.image_name = "/storage/emulated/0/DCIM/" + GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
+            _Ins.ins_image_name = "/storage/emulated/0/DCIM/" + GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
         }
         else
         {
-            _Ins.image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
+            _Ins.ins_image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
         }
 
-        Debug.Log("Inspection DB : " + _Ins.ins_id.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.image_name);
+        Debug.Log("Inspection DB : " + _Ins.idx.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector_name + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.ins_image_name);
         
     }
 
     private void UpdateDataForm()
     {
-        GameObject.Find("ifInsID").GetComponent<InputField>().text = _Ins.ins_id.ToString();
+        GameObject.Find("ifInsID").GetComponent<InputField>().text = _Ins.idx.ToString();
         GameObject.Find("ifInsDate").GetComponent<InputField>().text = _Ins.ins_date;
-        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = _Ins.inspector;
-        GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector;
+        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = _Ins.inspector_name;
+        GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector_etc;
         GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = _Ins.damage_type-1;
         GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = _Ins.damage_object-1;
         GameObject.Find("ifDamageX").GetComponent<InputField>().text = _Ins.damage_loc_x.ToString();
         GameObject.Find("ifDamageY").GetComponent<InputField>().text = _Ins.damage_loc_y.ToString();
         GameObject.Find("ifDamageZ").GetComponent<InputField>().text = _Ins.damage_loc_z.ToString();
-        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.image_name;
+        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.ins_image_name;
     }
 
     public void ClearDataInspection()
@@ -232,35 +236,35 @@ public class SIMS_Demo : MonoBehaviour
 
         UpdateDataInspection();
 
-        Debug.Log("Inspection Insert : " + _Ins.image_name);
-        StartCoroutine(PostFormDataImage("inspection", "insert", _Ins.image_name));
+        Debug.Log("Inspection Insert : " + _Ins.ins_image_name);
+        StartCoroutine(PostFormDataImage("inspection", "insert", _Ins.ins_image_name));
     }
 
     public void OnClick_InsUpdate()
     {
         UpdateDataInspection();
 
-        StartCoroutine(PostFormDataImage("inspection", _Ins.ins_id.ToString(), _Ins.image_name));
+        StartCoroutine(PostFormDataImage("inspection", _Ins.idx.ToString(), _Ins.ins_image_name));
 
     }
     public void OnClick_InsUpdateData()
     {
         UpdateDataInspection();
 
-        StartCoroutine(PostFormData("inspection/data", _Ins.ins_id.ToString()));
+        StartCoroutine(PostFormData("inspection/data", _Ins.idx.ToString()));
     }
 
     public void OnClick_InsUpdateImage()
     {
         UpdateDataInspection();
-        StartCoroutine(PostFormImage("inspection/image", _Ins.ins_id.ToString(), _Ins.image_name));
+        StartCoroutine(PostFormImage("inspection/image", _Ins.idx.ToString(), _Ins.ins_image_name));
     }
 
     public void OnClick_InsSelect()
     {
         UpdateDataInspection();
 
-        string uri = "inspection/" + _Ins.ins_id.ToString();
+        string uri = "inspection/" + _Ins.idx.ToString();
         //form-data(image, key/value) 동시 가져오기
         StartCoroutine(this.GetMultipartformImage(uri));
     }
@@ -269,7 +273,7 @@ public class SIMS_Demo : MonoBehaviour
     {
         UpdateDataInspection();
 
-        string uri = "inspection/" + _Ins.ins_id.ToString();
+        string uri = "inspection/" + _Ins.idx.ToString();
         //form-data(image, key/value) 삭제
         StartCoroutine(this.Delete(uri)); 
     }
@@ -367,9 +371,9 @@ public class SIMS_Demo : MonoBehaviour
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        if (_Ins.ins_id > -1)
+        if (_Ins.idx > -1)
         {
-            formData.Add(new MultipartFormDataSection("ins_id", _Ins.ins_id.ToString()));
+            formData.Add(new MultipartFormDataSection("idx", _Ins.idx.ToString()));
         }
         else
         {
@@ -407,12 +411,12 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
+            Debug.Log("점검 ID " + _Ins.idx.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
         {
-            Debug.Log("점검 ID " + _Ins.ins_id.ToString() + " 이미지가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
+            Debug.Log("점검 ID " + _Ins.idx.ToString() + " 이미지가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             Debug.Log("Request Response: " + www.downloadHandler.text);
         }
     }
@@ -422,9 +426,9 @@ public class SIMS_Demo : MonoBehaviour
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        if (_Ins.ins_id > -1)
+        if (_Ins.idx > -1)
         {
-            formData.Add(new MultipartFormDataSection("ins_id", _Ins.ins_id.ToString()));
+            formData.Add(new MultipartFormDataSection("idx", _Ins.idx.ToString()));
         }
         else
         {
@@ -435,7 +439,7 @@ public class SIMS_Demo : MonoBehaviour
         }
 
         formData.Add(new MultipartFormDataSection("ins_date", _Ins.ins_date != "" ? _Ins.ins_date:"-1"));
-        formData.Add(new MultipartFormDataSection("inspector", _Ins.inspector != "" ? _Ins.inspector : "-1"));
+        formData.Add(new MultipartFormDataSection("inspector", _Ins.inspector_name != "" ? _Ins.inspector_name : "-1"));
         formData.Add(new MultipartFormDataSection("damage_type", _Ins.damage_type > -1 ? _Ins.damage_type.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_object", _Ins.damage_object > -1 ? _Ins.damage_object.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x > -1 ? _Ins.damage_loc_x.ToString() : "-1"));
@@ -448,12 +452,12 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
+            Debug.Log("점검 ID " + _Ins.idx.ToString() + "이 업데이트 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
         {
-            Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
+            Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             Debug.Log("Request Response: " + www.downloadHandler.text);
 
             //업로드가 완료되면 폼을 클리어한다.
@@ -470,9 +474,9 @@ public class SIMS_Demo : MonoBehaviour
         Debug.Log(url);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        if (_Ins.ins_id > -1)
+        if (_Ins.model_idx > -1)
         {
-            formData.Add(new MultipartFormDataSection("model_idx", _Ins.ins_id.ToString()));
+            formData.Add(new MultipartFormDataSection("model_idx", _Ins.model_idx.ToString()));
         }
         else
         {
@@ -482,7 +486,7 @@ public class SIMS_Demo : MonoBehaviour
         }
 
         // formData.Add(new MultipartFormDataSection("ins_date", _Ins.ins_date != "" ? _Ins.ins_date:"-1"));
-        formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector != "" ? _Ins.inspector : "-1"));
+        formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector_name != "" ? _Ins.inspector_name : "-1"));
         formData.Add(new MultipartFormDataSection("damage_type", _Ins.damage_type > -1 ? _Ins.damage_type.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_object", _Ins.damage_object  > -1 ? _Ins.damage_object.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x > -1 ? _Ins.damage_loc_x.ToString() : "-1"));
@@ -524,7 +528,7 @@ public class SIMS_Demo : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
+            Debug.Log("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
         else
@@ -532,11 +536,11 @@ public class SIMS_Demo : MonoBehaviour
             if (id == "")
             {
                 //Debug.Log("Form upload complete!");
-                Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
+                Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
             }
             else
             {
-                Debug.Log("점검 ID " + _Ins.ins_id.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
+                Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             }
 
             Debug.Log("Request Response: " + www.downloadHandler.text);
@@ -697,11 +701,11 @@ public class SIMS_Demo : MonoBehaviour
                 if (ins != null)
                 {
                     _Ins = ins;
-                    Debug.Log("점검 ID : " + _Ins.ins_id.ToString() + " 조회 되었습니다.");
+                    Debug.Log("점검 ID : " + _Ins.idx.ToString() + " 조회 되었습니다.");
                     UpdateDataForm();
 
                     //File.WriteAllBytes("d:/sims.jpg", _Ins.image);
-                    ViewImage("imgView", _Ins.image);
+                    ViewImage("imgView", _Ins.ins_bytes);
                 }
                 else
                 {
@@ -798,7 +802,7 @@ public class SIMS_Demo : MonoBehaviour
                 List<Inspection> list = JsonConvert.DeserializeObject<List<Inspection>>(message);
                 foreach (Inspection c in list)
                 {
-                    Debug.LogFormat("{0}, {1}, {2}", c.ins_id, c.ins_date, c.inspector);
+                    Debug.LogFormat("{0}, {1}, {2}", c.idx, c.ins_date, c.inspector);
                 } */
                 int count = 0;
                 List<Model> list = JsonConvert.DeserializeObject<List<Model>>(message);
@@ -828,7 +832,7 @@ public class SIMS_Demo : MonoBehaviour
             {
                 Debug.Log(www.error);
                 if (type == "ins")
-                    Debug.Log("점검 ID : " + _Ins.ins_id.ToString() + " 삭제가 실패했습니다.");
+                    Debug.Log("점검 ID : " + _Ins.idx.ToString() + " 삭제가 실패했습니다.");
                 else
                     Debug.Log("모델 ID : " + _model.model_id.ToString() + " 삭제가 실패했습니다.");
             }
@@ -838,7 +842,7 @@ public class SIMS_Demo : MonoBehaviour
                 //Debug.Log("deleted !!");
                 if (type == "ins")
                 {
-                    Debug.Log("점검 ID : " + _Ins.ins_id.ToString() + " 삭제 되었습니다.");
+                    Debug.Log("점검 ID : " + _Ins.idx.ToString() + " 삭제 되었습니다.");
                     ClearDataInspection();
                 }
                 else
