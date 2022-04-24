@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CpasuleIni : MonoBehaviour
+public class CapsuleInstantiate : MonoBehaviour
 {
-    // Start is called before the first frame update
-    
     void Start()
     {
         Transform points = GameObject.Find("StartCapule").GetComponent<Transform>();

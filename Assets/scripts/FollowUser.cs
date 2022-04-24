@@ -15,22 +15,22 @@ public class FollowUser : MonoBehaviour
     }
     void Update()
     {
-      if(TargetCapsule==null)
-      {
-        Target = GameObject.Find("Capsule");
+		if(TargetCapsule==null)
+		{
+			Target = GameObject.Find("Capsule");
 
-        TargetCapsule = Target.transform;
-      }
-      else
-      {
-        
-      }
-
+			TargetCapsule = Target.transform;
+		}
+		else
+		{
+			
+		}
     }
+
     private void LateUpdate()
     {     
-      Navigation.position =new Vector3(TargetCapsule.position.x,8.36f,TargetCapsule.position.z);
-      Navigation.LookAt(TargetCapsule);
+		Navigation.position =new Vector3(TargetCapsule.position.x,8.36f,TargetCapsule.position.z);
+		Navigation.LookAt(TargetCapsule);
     }
 
 }

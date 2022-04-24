@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using GoogleARCoreInternal;
 
@@ -17,11 +16,11 @@ public class Control : MonoBehaviour
     }
     public void OnEnable()
     {
-            LifecycleManager.Instance.EnableSession();
+        LifecycleManager.Instance.EnableSession();
     }
     public void OnDisable()
     {
-            LifecycleManager.Instance.DisableSession();
+        LifecycleManager.Instance.DisableSession();
     }
 }
 

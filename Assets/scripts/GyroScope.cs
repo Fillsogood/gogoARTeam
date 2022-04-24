@@ -15,12 +15,9 @@ public class GyroScope : MonoBehaviour
     Transform xText;
     Transform yText;
     Transform panel;
-    
     Vector3 m_PlayerRot;
 
-    
-
-      void Start()
+    void Start()
     {
         Capsule =new GameObject("Capsule");
         Capsule.transform.position =this.transform.position;
@@ -30,8 +27,6 @@ public class GyroScope : MonoBehaviour
         x=xText.GetComponent<Text>();
         yText = GameObject.Find("Canvas").transform.Find("YText");
         y=yText.GetComponent<Text>();
-       //GameObject.Find("Canvas").transform.Find("XText").GetComponent<Text>().text = " X : " + pos.x;   
-        
     }
 
     protected void Update()
@@ -41,24 +36,12 @@ public class GyroScope : MonoBehaviour
         x.text=" X:"+(int)(pos.x);
         y.text="Y:"+(int)(pos.y);
         gyroupdate();
-
     }
 
     void FixedUpdate()
     {
         StopToWall();
         AddRigidbody();
-
-        //1초마다 실행
-        // if(Time.time > nextTime){
-        //     nextTime = Time.time + TimeLeft;
-        //     // MoveMoles();
-        //     Debug.Log(average());
-        //     // Debug.Log(m_PlayerRot.y);
-        // }
-
-        //Debug.Log("Y : " + Input.gyro.userAcceleration.y);
-        //Debug.Log("z:"+Input.gyro.rotationRate.z);
 
         if(average()>=0.0612304173409939 && average()<=0.09&&!isBorder)
         {
@@ -76,23 +59,15 @@ public class GyroScope : MonoBehaviour
             panel.gameObject.SetActive(true);
             if(Capsule.GetComponent<Rigidbody>()==null)
             {
-                 Capsule.AddComponent<Rigidbody>();   
+                Capsule.AddComponent<Rigidbody>();   
             }
             else
             {
-                 rb = Capsule.GetComponent<Rigidbody>();
-                 rb.freezeRotation =true;
+                rb = Capsule.GetComponent<Rigidbody>();
+                rb.freezeRotation =true;
             }
         }
-        else
-        {
-            panel = GameObject.Find("Canvas").transform.Find("DefectUpdateBtn");
-            Destroy(rb);
-           panel.gameObject.SetActive(false);
-
-        }
     }
-
     
     double average()
     {
@@ -110,14 +85,10 @@ public class GyroScope : MonoBehaviour
         return result /= arr.Length;
     }
 
-
-     void gyroupdate()
-	{   
-       
+    void gyroupdate()
+	{
         m_PlayerRot.y -= Input.gyro.rotationRate.z*1.0f;
 		Capsule.transform.eulerAngles = m_PlayerRot;
-        
-		
 	}
 
     void StopToWall()
@@ -128,7 +99,7 @@ public class GyroScope : MonoBehaviour
 
     void AddRigidbody()
     {
-         Debug.DrawRay(transform.position,-transform.right*0.8f,Color.red);
-         isTri = Physics.Raycast(transform.position,-transform.right,0.8f,LayerMask.GetMask("rb"));
+        Debug.DrawRay(transform.position,-transform.right*0.8f,Color.red);
+        isTri = Physics.Raycast(transform.position,-transform.right,0.8f,LayerMask.GetMask("rb"));
     }
 }
