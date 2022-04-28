@@ -51,12 +51,22 @@ public class Inspection
 public class SIMS_Demo : MonoBehaviour
 {
     //private string serverPath = "http://localhost:8080";
-    private string serverPath = "http://14.7.197.230:8080";
+    private string serverPath = "http://182.215.11.80:8080";
 
     private string serverPort = "8080";
 
     private Inspection _Ins = new Inspection();
     private Model _model = new Model();
+
+    public static string strToEdit = "";
+
+    private bool isConsoleShowing = true;
+
+    private float ta_left;
+    private float ta_top;
+    private float ta_width;
+    private float ta_height;
+    
 
     void Start()
     {
@@ -64,33 +74,45 @@ public class SIMS_Demo : MonoBehaviour
         {
             StartCoroutine("CheckPermissionAndroid");
         }
+        SimsLog(Application.persistentDataPath);
     }
 
     private void UpdateServerIpPort()
     {
-        string ip = "14.7.197.230";
+        string ip = "182.215.11.80";
         string port = "8080";
 
         if (ip == "" || port == "")
         {
             Debug.Log("IP 및 Port 입력하세요. 서버와 통신을 할 수가 있습니다.");
+            SimsLog("IP 및 Port 입력하세요. 서버와 통신을 할 수가 있습니다.");
         }
         else
         {
             serverPath = "http://" + ip + ":" + port;
             Debug.Log(serverPath);
+            SimsLog(serverPath);
         }
     }
+
+     private void SimsLog(string text)
+    {
+       // GameObject.Find("fasd").GetComponent<Text>().text += text + "\n";
+       // strToEdit=;
+    }
+
+
+    
 
     private void UpdateDataInspection()
     {
         UpdateServerIpPort();
 
         _Ins.model_idx = SingletonModelIdx.instance.ModelIdx;
-        _Ins.ins_date = GameObject.Find("ifInsDate").GetComponent<InputField>().text.ToString();
         _Ins.inspector_name = GameObject.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
         _Ins.inspector_etc = GameObject.Find("ifinspector_etc").GetComponent<InputField>().text.ToString();
-        
+        GameObject Capsule = GameObject.Find("Capsule");
+        Vector3 pos = Capsule.transform.position;
         try
         {
             _Ins.damage_type = (GameObject.Find("DdDamageType").GetComponent<Dropdown>().value)+1;
@@ -108,9 +130,8 @@ public class SIMS_Demo : MonoBehaviour
              _Ins.damage_object = -1;
         }
         try
-        {
-            _Ins.damage_loc_x = Convert.ToSingle(GameObject.Find("ifDamageX").GetComponent<InputField>().text.ToString());
-            Debug.Log(_Ins.damage_loc_x);
+        {         
+            _Ins.damage_loc_x = pos.x;
         }
         catch (FormatException)
         {
@@ -118,7 +139,7 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_loc_y = Convert.ToSingle(GameObject.Find("ifDamageY").GetComponent<InputField>().text.ToString());
+            _Ins.damage_loc_y = pos.y;
         }
         catch (FormatException)
         {
@@ -126,57 +147,32 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_loc_z = Convert.ToSingle(GameObject.Find("ifDamageZ").GetComponent<InputField>().text.ToString());
+            _Ins.damage_loc_z = pos.z;
         }
         catch (FormatException)
         {
             _Ins.damage_loc_z = -1;
         }
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            _Ins.ins_image_name = "/storage/emulated/0/DCIM/" + GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
-        }
-        else
-        {
-            _Ins.ins_image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
-        }
+        _Ins.ins_image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
 
         //Debug.Log("Inspection DB : " + _Ins.idx.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector_name + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.ins_image_name);
     }
 
     private void UpdateDataForm()
     {
-        GameObject.Find("ifInsID").GetComponent<InputField>().text = _Ins.idx.ToString();
-        GameObject.Find("ifInsDate").GetComponent<InputField>().text = _Ins.ins_date;
         GameObject.Find("ifInsInspector").GetComponent<InputField>().text = _Ins.inspector_name;
         GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector_etc;
         GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = _Ins.damage_type-1;
         GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = _Ins.damage_object-1;
-        GameObject.Find("ifDamageX").GetComponent<InputField>().text = _Ins.damage_loc_x.ToString();
-        GameObject.Find("ifDamageY").GetComponent<InputField>().text = _Ins.damage_loc_y.ToString();
-        GameObject.Find("ifDamageZ").GetComponent<InputField>().text = _Ins.damage_loc_z.ToString();
         GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.ins_image_name;
     }
 
-    public void ClearDataInspection()
-    {
-        GameObject.Find("ifInsID").GetComponent<InputField>().text = "";
-        GameObject.Find("ifInsDate").GetComponent<InputField>().text = "";
-        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = "";
-         GameObject.Find("ifinspector_etc").GetComponent<InputField>().text ="";
-        GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
-        GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
-        GameObject.Find("ifDamageX").GetComponent<InputField>().text = "";
-        GameObject.Find("ifDamageY").GetComponent<InputField>().text = "";
-        GameObject.Find("ifDamageZ").GetComponent<InputField>().text = "";
-        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
-    }
-
+   
     public void OnClick_InsInsert()
     {
         UpdateDataInspection();
-
+        SimsLog("OnClick_InsInsert()");
         StartCoroutine(PostFormDataImage("inspection", "insert", _Ins.ins_image_name));
     }
 
@@ -202,6 +198,8 @@ public class SIMS_Demo : MonoBehaviour
                 // 별도로 확인 팝업을 띄우지 않을꺼면 OpenAppSetting()을 바로 호출함.
                 //OpenAppSetting();
                 Debug.Log("저장소 권한이 필요함.");
+
+                 SimsLog("저장소 권한이 필요함.");
                 yield break;
             }
         }
@@ -226,24 +224,27 @@ public class SIMS_Demo : MonoBehaviour
         image.sprite = sprite;
     }
 
-    //이미지와 Inspection 삽입
+    //�̹����� Inspection ����
     private IEnumerator PostFormDataImage(string uri, string id, string path_image)
     {
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
         Debug.Log(url);
+        SimsLog(url);
 
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        
         if (_Ins.model_idx > -1)
         {
+            
             formData.Add(new MultipartFormDataSection("model_idx", _Ins.model_idx.ToString()));
         }
         else
         {
-            Debug.Log("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!!");
-
+            Debug.Log("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!");
+            SimsLog("점검 ID을 입력하시기 바랍니다. 다시 확인바랍니다.!");
             yield break;;
         }
-
+        
         formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector_name != "" ? _Ins.inspector_name : "-1"));
         formData.Add(new MultipartFormDataSection("damage_type", _Ins.damage_type > -1 ? _Ins.damage_type.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_object", _Ins.damage_object  > -1 ? _Ins.damage_object.ToString() : "-1"));
@@ -251,13 +252,13 @@ public class SIMS_Demo : MonoBehaviour
         formData.Add(new MultipartFormDataSection("damage_loc_y", _Ins.damage_loc_y > -1 ? _Ins.damage_loc_y.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_z", _Ins.damage_loc_z > -1 ? _Ins.damage_loc_z.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("inspector_etc", _Ins.inspector_etc != "" ? _Ins.inspector_etc : "-1"));
-
+        
         byte[] img = null;
         string strImgformat = "";
         if (Path.GetExtension(path_image) == ".jpg")
         {
             img = File.ReadAllBytes(path_image);
-            strImgformat = "image/jpeg";
+            strImgformat = "image/jpeg";   
         }
         else if (Path.GetExtension(path_image) == ".png")
         {
@@ -266,19 +267,21 @@ public class SIMS_Demo : MonoBehaviour
         }
         else
         {
-            Debug.Log("jpg, png 파일만 전송이 가능합니다. 다시 확인바랍니다.!!");
+             SimsLog("jpg, png 파일만 전송이 가능합니다. 다시 확인바랍니다.!");
+            Debug.Log("jpg, png 파일만 전송이 가능합니다. 다시 확인바랍니다.!");
             yield break;
-        }
-
+        } 
         formData.Add(new MultipartFormFileSection("file", img, Path.GetFileName(path_image), strImgformat));
-        
+
         UnityWebRequest www = UnityWebRequest.Post(url, formData);
         //www.SetRequestHeader("Content-Type", "multipart/form-data");
-        
-        yield return www.SendWebRequest();
 
+        yield return www.SendWebRequest();
+ 
         if (www.result != UnityWebRequest.Result.Success)
         {
+             SimsLog("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
+             SimsLog(www.error);
             Debug.Log("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
@@ -286,17 +289,19 @@ public class SIMS_Demo : MonoBehaviour
         {
             if (id == "")
             {
+                 SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
                 Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
             }
             else
             {
+                 SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
                 Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             }
 
             Debug.Log("Request Response: " + www.downloadHandler.text);
+            SimsLog("Request Response: " + www.downloadHandler.text);
 
-            //업로드가 완료되면 폼을 클리어한다.
-            ClearDataInspection();
+            //업로드가 완료되면 폼을 클리어한다..          
         }
     }
     

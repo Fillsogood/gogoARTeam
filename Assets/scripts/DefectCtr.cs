@@ -22,22 +22,27 @@ public class DefectCtr : MonoBehaviour
     }
 
     public void OnPanel()
-    {  
-        GameObject Capsule = GameObject.Find("Capsule");
+    {         
         Transform DefectSaveBtn = GameObject.Find("Canvas").transform.Find("panel_Inspection");
         DefectSaveBtn.gameObject.SetActive(true);
-            Vector3 pos = Capsule.transform.position;
-            GameObject.Find("ifDamageX").GetComponent<InputField>().text = pos.x.ToString();
-            GameObject.Find("ifDamageY").GetComponent<InputField>().text = pos.y.ToString();
-            GameObject.Find("ifDamageZ").GetComponent<InputField>().text = pos.z.ToString();
-            GameObject.Find("ifInsDate").GetComponent<InputField>().text = DateTime.Now.ToString("yyyy-MM-dd");
+        
     }
     
     public void OnSave()
     {
+        ClearDataInspection();
         Transform DefectSaveBtn = GameObject.Find("Canvas").transform.Find("panel_Inspection");
         DefectSaveBtn.gameObject.SetActive(false);
         SaveDefect();
     }
+     public void ClearDataInspection()
+    {
+        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = "";
+        GameObject.Find("ifinspector_etc").GetComponent<InputField>().text ="";
+        GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
+        GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
+        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
+    }
+
 
 }
