@@ -41,7 +41,7 @@ public class DefectCtr : MonoBehaviour
         GameObject.Find("ifinspector_etc").GetComponent<InputField>().text ="";
         GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
         GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
-        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
+        //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
     }
 
 

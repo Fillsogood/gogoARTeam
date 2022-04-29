@@ -50,8 +50,8 @@ public class Inspection
 
 public class SIMS_Demo : MonoBehaviour
 {
-    //private string serverPath = "http://localhost:8080";
-    private string serverPath = "http://182.215.11.80:8080";
+    private string serverPath = "http://localhost:8080";
+    //private string serverPath = "http://182.215.11.80:8080";
 
     private string serverPort = "8080";
 
@@ -66,6 +66,8 @@ public class SIMS_Demo : MonoBehaviour
     private float ta_top;
     private float ta_width;
     private float ta_height;
+
+  
     
 
     void Start()
@@ -79,7 +81,8 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        string ip = "182.215.11.80";
+        string ip = "localhost";
+        //string ip = "182.215.11.80";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -154,7 +157,8 @@ public class SIMS_Demo : MonoBehaviour
             _Ins.damage_loc_z = -1;
         }
 
-        _Ins.ins_image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
+        //_Ins.ins_image_name = GameObject.Find("ifPicturePath").GetComponent<InputField>().text.ToString();
+        _Ins.ins_image_name = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text;
 
         //Debug.Log("Inspection DB : " + _Ins.idx.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector_name + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.ins_image_name);
     }
@@ -165,7 +169,7 @@ public class SIMS_Demo : MonoBehaviour
         GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector_etc;
         GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = _Ins.damage_type-1;
         GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = _Ins.damage_object-1;
-        GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.ins_image_name;
+        //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.ins_image_name;
     }
 
    
