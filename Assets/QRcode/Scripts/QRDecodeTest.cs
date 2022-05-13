@@ -23,6 +23,7 @@ public class QRDecodeTest : MonoBehaviour
 	private void Start()
 	{
 		
+		GameObject.Find("startButton").GetComponent<Button>().interactable = false;
 	}
 
 	private void Update()
@@ -43,10 +44,11 @@ public class QRDecodeTest : MonoBehaviour
 					var msg = dataText.Split('/');
 					dataText= msg[2];
 				}
-				dataText = "2"; //   <================================================================= 여기에 마커 모델 숫자 들어와야함 숫자만
+				dataText = "11"; //   <================================================================= 여기에 마커 모델 숫자 들어와야함 숫자만
 				SingletonModelIdx.instance.ModelIdx =Convert.ToInt32(dataText);
+				GameObject.Find("startButton").GetComponent<Button>().interactable = true;
 				//Application.OpenURL(dataText);
-				GotoNextScene("Test");
+				//GotoNextScene("Test");
 			}
 		}
 		//this.UiText.text = dataText;
@@ -56,7 +58,7 @@ public class QRDecodeTest : MonoBehaviour
 		}
 		if (this.scanLineObj != null)
 		{
-			this.scanLineObj.SetActive(false);
+			//this.scanLineObj.SetActive(false);
 		}
 
 	}
@@ -108,14 +110,15 @@ public class QRDecodeTest : MonoBehaviour
 		}
 	}
 
-	public void GotoNextScene(string scenename)
+	public void GotoNextScene()
 	{
-		if (this.e_qrController != null)
-		{
-			this.e_qrController.StopWork();
-		}
+
+		// if (this.e_qrController != null)
+		// {
+		// 	this.e_qrController.StopWork();
+		// }
 		//Application.LoadLevel(scenename);
-		SceneManager.LoadScene(scenename);
+		SceneManager.LoadScene("Test");
 	}
     
 

@@ -154,7 +154,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   e_qrController: {fileID: 841200353}
-  UiText: {fileID: 0}
   resetBtn: {fileID: 1863062879}
   scanLineObj: {fileID: 694556625}
   torchImage: {fileID: 1418039534}
@@ -766,14 +765,14 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1257964406}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 153917683}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: Play
+        m_TargetAssemblyTypeName: QRDecodeTest, Assembly-CSharp
+        m_MethodName: GotoNextScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1327,7 +1326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -46.200012, y: -46.30005}
+  m_AnchoredPosition: {x: -46.200073, y: -46.30005}
   m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1863062881

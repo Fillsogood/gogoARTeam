@@ -37,9 +37,9 @@ public class DeviceCamera {
 	/// </summary>
 	public void Play()
 	{
-		if (isPlaying()) {
-			return;
-		}
+		// if (isPlaying()) {
+		// 	return;
+		// }
 #if (UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR
 	    EasyWebCam.Play();
 #else
