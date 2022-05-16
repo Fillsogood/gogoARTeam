@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class GyroScope : MonoBehaviour
 {
     GameObject Capsule;
@@ -31,18 +32,19 @@ public class GyroScope : MonoBehaviour
 
     protected void Update()
     {   
-        Vector3 pos;
-        pos = this.gameObject.transform.position;
-        x.text=" X:"+(int)(pos.x);
-        y.text="Y:"+(int)(pos.y);
-        gyroupdate();
+        if(SceneManager.GetActiveScene().name == "Test")
+        {
+            Vector3 pos;
+            pos = this.gameObject.transform.position;
+            x.text=" X:"+pos.x;
+            y.text="Y:"+pos.z;
+            gyroupdate(); 
+        }
     }
 
     void FixedUpdate()
     {
-        StopToWall();
         AddRigidbody();
-
         if(average()>=0.0612304173409939 && average()<=0.09&&!isBorder)
         {
             //이동
@@ -91,11 +93,6 @@ public class GyroScope : MonoBehaviour
 		Capsule.transform.eulerAngles = m_PlayerRot;
 	}
 
-    void StopToWall()
-    {
-        Debug.DrawRay(transform.position,-transform.right*0.5f,Color.green);
-        isBorder = Physics.Raycast(transform.position,-transform.right,0.5f,LayerMask.GetMask("wall"));
-    }
 
     void AddRigidbody()
     {

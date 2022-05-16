@@ -157,7 +157,7 @@ MonoBehaviour:
   resetBtn: {fileID: 1863062879}
   scanLineObj: {fileID: 694556625}
   torchImage: {fileID: 1418039534}
-  isOpenBrowserIfUrl: 1
+  isOpenBrowserIfUrl: 0
 --- !u!4 &153917684
 Transform:
   m_ObjectHideFlags: 0
@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 1232918802}
   - component: {fileID: 1232918801}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Canvas1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

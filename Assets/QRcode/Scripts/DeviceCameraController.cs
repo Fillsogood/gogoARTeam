@@ -98,11 +98,11 @@ public class DeviceCameraController : MonoBehaviour {
     {
         if (this.webcam != null && isPlaying)
         {
-            //this.webcam.Stop();
+            this.webcam.Stop();
         }
         if (previewImage != null)
         {
-            //previewImage.texture = null;
+            previewImage.texture = null;
         }
     }
 
