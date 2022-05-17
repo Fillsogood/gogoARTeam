@@ -6,7 +6,7 @@ public class DefectCtr : MonoBehaviour
 {
     void Start()
     {
-        
+        Input.gyro.enabled=true;
     }
 
     void SaveDefect()
@@ -25,7 +25,7 @@ public class DefectCtr : MonoBehaviour
     {         
         Transform DefectSaveBtn = GameObject.Find("Canvas").transform.Find("panel_Inspection");
         DefectSaveBtn.gameObject.SetActive(true);
-        
+        GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("txtGyroValue").GetComponent<Text>().text=GyroScopeCtr.GetGyroData();
     }
     
     public void OnSave()

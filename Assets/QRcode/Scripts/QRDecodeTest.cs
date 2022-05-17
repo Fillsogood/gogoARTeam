@@ -20,6 +20,8 @@ public class QRDecodeTest : MonoBehaviour
 	/// </summary>
 	public bool isOpenBrowserIfUrl;
 
+	private bool isPlaying;
+
 	private void Start()
 	{
 		
@@ -30,9 +32,15 @@ public class QRDecodeTest : MonoBehaviour
 		
 		if(SceneManager.GetActiveScene().name == "Test")
 		{
-			Play();
-			Debug.Log("dasd");
-			Debug.Log(GameObject.Find("startButton"));
+			//Debug.Log(isPlaying);
+			if(isPlaying != true)
+			{
+				//Debug.Log("Playing");
+				Play();
+			}
+			
+			//Debug.Log("dasd");
+			//Debug.Log(GameObject.Find("startButton"));
 			GameObject.Find("startButton").GetComponent<Button>().interactable = false;
 		}
 	}
@@ -99,12 +107,14 @@ public class QRDecodeTest : MonoBehaviour
 		Reset ();
 		if (this.e_qrController != null)
 		{
+			isPlaying = true;
 			this.e_qrController.StartWork();
 		}
 	}
 
 	public void Stop()
 	{
+		isPlaying = false;
 		if (this.e_qrController != null)
 		{
 			this.e_qrController.StopWork();

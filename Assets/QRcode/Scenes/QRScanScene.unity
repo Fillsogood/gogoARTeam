@@ -157,7 +157,7 @@ MonoBehaviour:
   resetBtn: {fileID: 1863062879}
   scanLineObj: {fileID: 694556625}
   torchImage: {fileID: 1418039534}
-  isOpenBrowserIfUrl: 0
+  isOpenBrowserIfUrl: 1
 --- !u!4 &153917684
 Transform:
   m_ObjectHideFlags: 0
