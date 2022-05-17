@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 8037583462603628861}
   - component: {fileID: 6084729893164804825}
   - component: {fileID: 5379568861441344449}
+  - component: {fileID: 5381075276913408095}
   m_Layer: 3
   m_Name: defect
   m_TagString: Untagged
@@ -223,3 +224,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5381075276913408095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662891972920606002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 029478a8af43bfe42a430e7aff512cc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTargetCanMove: 1
+  targetIcons:
+  - {fileID: 11400000, guid: ad052c85aa8b91046b108d663842a032, type: 2}
+  idTarget: 234236
