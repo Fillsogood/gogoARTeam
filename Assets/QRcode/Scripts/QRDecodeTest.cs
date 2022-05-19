@@ -20,36 +20,20 @@ public class QRDecodeTest : MonoBehaviour
 	/// </summary>
 	public bool isOpenBrowserIfUrl;
 
-	private bool isPlaying;
-
 	private void Start()
 	{
 		
+		GameObject.Find("startButton").GetComponent<Button>().interactable = false;
 	}
 
 	private void Update()
 	{
-		
-		if(SceneManager.GetActiveScene().name == "Test")
-		{
-			//Debug.Log(isPlaying);
-			if(isPlaying != true)
-			{
-				//Debug.Log("Playing");
-				Play();
-			}
-			
-			//Debug.Log("dasd");
-			//Debug.Log(GameObject.Find("startButton"));
-			GameObject.Find("startButton").GetComponent<Button>().interactable = false;
-		}
 	}
 
 	public void qrScanFinished(string dataText)
 	{
         Debug.Log(dataText);
 		Debug.Log(isOpenBrowserIfUrl);
-		
 		if (isOpenBrowserIfUrl) {
 			if (Utility.CheckIsUrlFormat(dataText))
 			{
@@ -63,10 +47,8 @@ public class QRDecodeTest : MonoBehaviour
 				dataText = "11"; //   <================================================================= 여기에 마커 모델 숫자 들어와야함 숫자만
 				SingletonModelIdx.instance.ModelIdx =Convert.ToInt32(dataText);
 				GameObject.Find("startButton").GetComponent<Button>().interactable = true;
-				
 				//Application.OpenURL(dataText);
 				//GotoNextScene("Test");
-				
 			}
 		}
 		//this.UiText.text = dataText;
@@ -107,14 +89,12 @@ public class QRDecodeTest : MonoBehaviour
 		Reset ();
 		if (this.e_qrController != null)
 		{
-			isPlaying = true;
 			this.e_qrController.StartWork();
 		}
 	}
 
 	public void Stop()
 	{
-		isPlaying = false;
 		if (this.e_qrController != null)
 		{
 			this.e_qrController.StopWork();
@@ -132,15 +112,13 @@ public class QRDecodeTest : MonoBehaviour
 
 	public void GotoNextScene()
 	{
-		
-		//this.e_qrController.StopWork();
+
 		// if (this.e_qrController != null)
 		// {
 		// 	this.e_qrController.StopWork();
 		// }
 		//Application.LoadLevel(scenename);
-		SceneManager.LoadScene("Test",LoadSceneMode.Additive);
-		Stop();
+		SceneManager.LoadScene("Test");
 	}
     
 

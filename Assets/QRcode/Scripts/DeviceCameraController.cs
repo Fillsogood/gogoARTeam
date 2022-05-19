@@ -39,14 +39,12 @@ public class DeviceCameraController : MonoBehaviour {
     void Start()
     {
         if (previewImage == null)
-        {   
+        {
             Debug.LogError("Error: Preview Image Can't Be Null ");
             return;
         }
-
         webcam = new DeviceCamera (isUseEasyWebCam);
         EasyWebCam.OnEasyWebCamStart += PreviewStart;
-        previewImage.texture = webcam.preview;
         StartWork();
     }
     
@@ -125,5 +123,3 @@ public class DeviceCameraController : MonoBehaviour {
     }
     
 }
-
-
