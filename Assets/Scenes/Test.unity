@@ -1473,7 +1473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.54901963}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2390,7 +2390,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1157949679}
+        m_TargetAssemblyTypeName: SIMS_Demo, Assembly-CSharp
+        m_MethodName: OnClick_InsObjectList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &389142054
 MonoBehaviour:
@@ -2570,10 +2582,10 @@ RectTransform:
   m_Father: {fileID: 1284082140}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 206.75, y: -161}
-  m_SizeDelta: {x: 405.99, y: 109.51}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 652, y: -1060}
+  m_SizeDelta: {x: 405.99, y: 109.51001}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427274663
 MonoBehaviour:
@@ -3498,10 +3510,30 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options: []
+    m_Options:
+    - m_Text: Tile
+      m_Image: {fileID: 0}
+    - m_Text: Wall/Floor/ceiling
+      m_Image: {fileID: 0}
+    - m_Text: Light
+      m_Image: {fileID: 0}
+    - m_Text: Pipes
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1157949679}
+        m_TargetAssemblyTypeName: SIMS_Demo, Assembly-CSharp
+        m_MethodName: OnClick_InsTypeList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &514124851
 MonoBehaviour:
@@ -3822,7 +3854,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &627936716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5373,7 +5405,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Broken
 --- !u!222 &970105779
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7078,7 +7110,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Tile
 --- !u!222 &1274060557
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7104,7 +7136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1284082140
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8015,7 +8047,13 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options: []
+    m_Options:
+    - m_Text: Broken
+      m_Image: {fileID: 0}
+    - m_Text: Detached
+      m_Image: {fileID: 0}
+    - m_Text: Mold production
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9456,7 +9494,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1550897659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10076,10 +10114,10 @@ RectTransform:
   m_Father: {fileID: 1284082140}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -212.50003, y: -160.00006}
-  m_SizeDelta: {x: 425, y: 109.5106}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -1066}
+  m_SizeDelta: {x: 425, y: 109.51062}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1627104128
 MonoBehaviour:
@@ -12642,7 +12680,7 @@ PrefabInstance:
     - target: {fileID: 1447752732691114434, guid: a51aff7608a7107439c6558acd3f6212,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -33.191
+      value: -33.190918
       objectReference: {fileID: 0}
     - target: {fileID: 1447752732802467521, guid: a51aff7608a7107439c6558acd3f6212,
         type: 3}

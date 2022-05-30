@@ -27,7 +27,21 @@ public class InsResponse
     public string err_message;
     public List<InspectionDto> data = new List<InspectionDto>();
 }
-
+[System.Serializable]
+public class InsObjectResponse
+{
+    public string api_result;
+    public string err_message;
+    public List<DamageObjectTypeDto> data = new List<DamageObjectTypeDto>();
+    
+}
+[System.Serializable]
+public class InsTypeResponse
+{
+    public string api_result;
+    public string err_message;
+    public List<DamageTypeDto> data = new List<DamageTypeDto>();
+}
 [System.Serializable]
 public class Inspection
 {
@@ -35,6 +49,7 @@ public class Inspection
     public int model_idx;
     public string inspector_name;
     public string admin_name;
+    public int damage_space;
 	public int damage_type;
 	public int damage_object;
 	public float damage_loc_x;
@@ -77,23 +92,41 @@ public class InspectionDto
     public int state;
 	public string ins_image_name;
 	public string ins_image_url;
+    public string ins_image_type;
 	public string ins_image_size;
-	public string ins_image_type;
     public string ad_image_name;
 	public string ad_image_url;
+    public string ad_image_type;
 	public string ad_image_size;
-	public string ad_image_type;
-    public string damage_name;
-    public string object_name;
+    public string space_name_en;
+    public string damage_name_en;
+    public string object_name_en;
     public string state_name;
 	public byte[] ins_bytes; 
 	public byte[] ad_bytes;
 }
 
+[System.Serializable]
+public class DamageObjectTypeDto
+{
+    public int idx;
+    public int space_idx;
+    public string object_name_en;
+    public string object_name_ko;
+}
+
+[System.Serializable]
+public class DamageTypeDto
+{
+    public int idx;
+    public int object_idx;
+    public string damage_name_en;
+    public string damage_name_ko;
+}
 public class SIMS_Demo : MonoBehaviour
 {
     //private string serverPath = "http://localhost:8080";
-    private string serverPath = "http://112.157.106.246:8080";
+    private string serverPath = "http://14.7.197.84:8080";
 
     private string serverPort = "8080";
 
@@ -110,6 +143,10 @@ public class SIMS_Demo : MonoBehaviour
     private float ta_height;
 
     private int listCount;
+    Dropdown s_Dropdown;
+    Dropdown o_Dropdown;
+    Dropdown t_Dropdown;
+    List<string> m_DropOptions = new List<string>();
     
 
     void Start()
@@ -124,7 +161,7 @@ public class SIMS_Demo : MonoBehaviour
     private void UpdateServerIpPort()
     {
         //string ip = "localhost";
-        string ip = "112.157.106.246";
+        string ip = "14.7.197.84";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -158,6 +195,14 @@ public class SIMS_Demo : MonoBehaviour
         _Ins.inspector_etc = GameObject.Find("ifinspector_etc").GetComponent<InputField>().text.ToString();
         GameObject Capsule = GameObject.Find("Capsule");
         Vector3 pos = Capsule.transform.position;
+        try
+        {
+            _Ins.damage_space = (GameObject.Find("DdSpace").GetComponent<Dropdown>().value)+1;
+        }
+        catch (FormatException)
+        {
+            _Ins.damage_space = -1;
+        }
         try
         {
             _Ins.damage_type = (GameObject.Find("DdDamageType").GetComponent<Dropdown>().value)+1;
@@ -209,12 +254,12 @@ public class SIMS_Demo : MonoBehaviour
     {
         GameObject.Find("ifInsInspector").GetComponent<InputField>().text = _Ins.inspector_name;
         GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector_etc;
+        GameObject.Find("DdSpace").GetComponent<Dropdown>().value = _Ins.damage_space-1;
         GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = _Ins.damage_type-1;
         GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = _Ins.damage_object-1;
         //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = _Ins.ins_image_name;
     }
 
-   
     public void OnClick_InsInsert()
     {
         UpdateDataInspection();
@@ -228,6 +273,57 @@ public class SIMS_Demo : MonoBehaviour
         UpdateServerIpPort();
         // var json = JsonConvert.SerializeObject(new Inspection(SingletonModelIdx.instance.ModelIdx));
         InsModelIdx("inspection/select_modelidx"); 
+    }
+
+    public void OnClick_InsObjectList()
+    {   
+        UpdateServerIpPort();
+
+        s_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>();
+        int val = s_Dropdown.value + 1;
+        string postData ="{\"space_idx\" : " + val + "}";
+
+        StartCoroutine(InsObjectIdx("inspection/damageobject_select_spaceidx",postData));
+    }
+
+    public void OnClick_InsTypeList()
+    {   
+        UpdateServerIpPort();
+        int s_Dd = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value+1;
+        int o_Dd = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value+1;
+        //object
+        int obj_Idx = 0 ;
+
+        if(s_Dd == 1) {    //Bath room
+            if(o_Dd == 1) obj_Idx = 1;
+            else if(o_Dd == 2) obj_Idx = 2;
+            else if(o_Dd == 3) obj_Idx = 3;
+            else obj_Idx = 4;
+        }
+        else if(s_Dd == 2) {   //Living room
+            if(o_Dd == 1) obj_Idx = 5;
+            else obj_Idx = 6;
+        }
+        else if(s_Dd == 3) {   //Kitchen
+            if(o_Dd == 1) obj_Idx = 7;
+            else if(o_Dd == 2) obj_Idx = 8;
+            else obj_Idx = 9;
+        }
+        else if(s_Dd == 4) {   //Bed room
+            if(o_Dd == 1) obj_Idx = 10;
+            else obj_Idx = 11;
+        }
+        else {  //Office
+            if(o_Dd == 1) obj_Idx = 12;
+            else obj_Idx = 13;
+        }
+        //int val = o_Dd + 1;
+        Debug.Log("s_Dd : "+ s_Dd);
+        Debug.Log("o_Dd : "+ o_Dd);
+        Debug.Log("_Ins.obj_Idx : "+ obj_Idx);
+        string postData ="{\"object_idx\" : " + obj_Idx + "}";
+
+        StartCoroutine(InsTypeIdx("inspection/damage_select_objectidx",postData));
     }
 
     IEnumerator CheckPermissionAndroid()
@@ -278,7 +374,6 @@ public class SIMS_Demo : MonoBehaviour
         image.sprite = sprite;
     }
 
-    //�̹����� Inspection ����
     private IEnumerator PostFormDataImage(string uri, string id, string path_image)
     {
         var url = string.Format("{0}/{1}/{2}", serverPath, uri, id);
@@ -300,12 +395,110 @@ public class SIMS_Demo : MonoBehaviour
         }
         
         formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector_name != "" ? _Ins.inspector_name : "-1"));
-        formData.Add(new MultipartFormDataSection("damage_type", _Ins.damage_type > -1 ? _Ins.damage_type.ToString() : "-1"));
-        formData.Add(new MultipartFormDataSection("damage_object", _Ins.damage_object  > -1 ? _Ins.damage_object.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x > -1 ? _Ins.damage_loc_x.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_y", _Ins.damage_loc_y > -1 ? _Ins.damage_loc_y.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("damage_loc_z", _Ins.damage_loc_z > -1 ? _Ins.damage_loc_z.ToString() : "-1"));
         formData.Add(new MultipartFormDataSection("inspector_etc", _Ins.inspector_etc != "" ? _Ins.inspector_etc : "-1"));
+
+        //object
+        int obj_Idx = 0 ;
+
+        if(_Ins.damage_space == 1) {    //Bath room
+            if(_Ins.damage_object == 1) obj_Idx = 1;
+            else if(_Ins.damage_object == 2) obj_Idx = 2;
+            else if(_Ins.damage_object == 3) obj_Idx = 3;
+            else obj_Idx = 4;
+        }
+        else if(_Ins.damage_space == 2) {   //Living room
+            if(_Ins.damage_object == 1) obj_Idx = 5;
+            else obj_Idx = 6;
+        }
+        else if(_Ins.damage_space == 3) {   //Kitchen
+            if(_Ins.damage_object == 1) obj_Idx = 7;
+            else if(_Ins.damage_object == 2) obj_Idx = 8;
+            else obj_Idx = 9;
+        }
+        else if(_Ins.damage_space == 4) {   //Bed room
+            if(_Ins.damage_object == 1) obj_Idx = 10;
+            else obj_Idx = 11;
+        }
+        else {  //Office
+            if(_Ins.damage_object == 1) obj_Idx = 12;
+            else obj_Idx = 13;
+        }
+
+        formData.Add(new MultipartFormDataSection("damage_object", obj_Idx > -1 ? obj_Idx.ToString() : "-1"));
+        
+        //type
+        int type_Idx = 0 ;
+
+        if(obj_Idx == 1) {    //Tile
+            if(_Ins.damage_type == 1) type_Idx = 1;
+            else if(_Ins.damage_type == 2) type_Idx = 2;
+            else type_Idx = 3;
+        }
+        else if(obj_Idx == 2) {   //Wall/Floor/ceiling
+            if(_Ins.damage_type == 1) type_Idx = 4;
+            else if(_Ins.damage_type == 2) type_Idx = 5;
+            else if(_Ins.damage_type == 3) type_Idx = 6;
+            else type_Idx = 7;
+        }
+        else if(obj_Idx == 3) {   //Light
+            if(_Ins.damage_type == 1) type_Idx = 8;
+            else type_Idx = 9;
+        }
+        else if(obj_Idx == 4) {   //Pipes
+            if(_Ins.damage_type == 1) type_Idx = 10;
+            else type_Idx = 11;
+        }
+        else if(obj_Idx == 5) {   //Wall/Floor/ceiling
+            if(_Ins.damage_type == 1) type_Idx = 12;
+            else if(_Ins.damage_type == 2) type_Idx = 13;
+            else if(_Ins.damage_type == 3) type_Idx = 14;
+            else type_Idx = 15;
+        }
+        else if(obj_Idx == 6) {   //Light
+            if(_Ins.damage_type == 1) type_Idx = 16;
+            else type_Idx = 17;
+        }
+        else if(obj_Idx == 7) {   //Sink
+            if(_Ins.damage_type == 1) type_Idx = 18;
+            else if(_Ins.damage_type == 2) type_Idx = 19;
+            else if(_Ins.damage_type == 3) type_Idx = 20;
+            else type_Idx = 21;
+        }
+        else if(obj_Idx == 8) {   //Wall/Floor/ceiling
+            if(_Ins.damage_type == 1) type_Idx = 22;
+            else if(_Ins.damage_type == 2) type_Idx = 23;
+            else if(_Ins.damage_type == 3) type_Idx = 24;
+            else type_Idx = 25;
+        }
+        else if(obj_Idx == 9) {   //Light
+            if(_Ins.damage_type == 1) type_Idx = 26;
+            else type_Idx = 27;
+        }
+        else if(obj_Idx == 10) {   //Wall/Floor/ceiling
+            if(_Ins.damage_type == 1) type_Idx = 28;
+            else if(_Ins.damage_type == 2) type_Idx = 29;
+            else if(_Ins.damage_type == 3) type_Idx = 30;
+            else type_Idx = 31;
+        }
+        else if(obj_Idx == 11) {   //Light
+            if(_Ins.damage_type == 1) type_Idx = 32;
+            else type_Idx = 33;
+        }
+        else if(obj_Idx == 12) {   //Wall/Floor/ceiling
+            if(_Ins.damage_type == 1) type_Idx = 34;
+            else if(_Ins.damage_type == 2) type_Idx = 35;
+            else if(_Ins.damage_type == 3) type_Idx = 36;
+            else type_Idx = 37;
+        }
+        else {  //Light
+            if(_Ins.damage_type == 1) type_Idx = 38;
+            else type_Idx = 39;
+        }
+        
+        formData.Add(new MultipartFormDataSection("damage_type", type_Idx  > -1 ? type_Idx.ToString() : "-1"));
         
         byte[] img = null;
         string strImgformat = "";
@@ -415,7 +608,7 @@ public class SIMS_Demo : MonoBehaviour
         {
             //이미지 넣기
             byte[] newBytes22 = j.ins_bytes;
-
+            Debug.Log(j.ins_bytes);
             MemoryStream ms = new MemoryStream(newBytes22);
             newBytes22 = ms.ToArray();
 
@@ -428,20 +621,105 @@ public class SIMS_Demo : MonoBehaviour
             image.sprite = sprite; 
 
             //하자 리스트 정보값 출력
-            GameObject.Find("item"+count).transform.Find("ItemInsType_Text").GetComponent<Text>().text = j.damage_name;
+            GameObject.Find("item"+count).transform.Find("ItemInsType_Text").GetComponent<Text>().text = j.space_name_en+"_"+j.object_name_en+"_"+j.damage_name_en;
 
-            GameObject.Find("item"+count).transform.Find("ItemInsDate_Text").GetComponent<Text>().text = "날짜 : "+j.ins_date; 
+            GameObject.Find("item"+count).transform.Find("ItemInsDate_Text").GetComponent<Text>().text = "Date : "+j.ins_date; 
 
-            GameObject.Find("item"+count).transform.Find("ItemInsInspector_Text").GetComponent<Text>().text ="점검자 : "+j.inspector_name; 
+            GameObject.Find("item"+count).transform.Find("ItemInsInspector_Text").GetComponent<Text>().text ="Inspector : "+j.inspector_name; 
 
-            GameObject.Find("item"+count).transform.Find("ItemInsLoc_Text").GetComponent<Text>().text ="하자 위치 : "+j.damage_loc_x+" / "+j.damage_loc_y+" / "+j.damage_loc_z; 
+            GameObject.Find("item"+count).transform.Find("ItemInsLoc_Text").GetComponent<Text>().text ="Location Defect : "+j.damage_loc_x+" / "+j.damage_loc_y+" / "+j.damage_loc_z; 
 
-            GameObject.Find("item"+count).transform.Find("ItemInsETC_Text").GetComponent<Text>().text ="기타사항 : "+j.inspector_etc;
+            GameObject.Find("item"+count).transform.Find("ItemInsETC_Text").GetComponent<Text>().text ="Etc : "+j.inspector_etc;
 
             count++;
         }
     }
-    
+    private IEnumerator InsObjectIdx(string uri,string data)
+    {
+        var url = string.Format("{0}/{1}", serverPath, uri);
+
+        var request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
+       
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        
+        request.SetRequestHeader("Content-Type", "application/json");
+
+          //응답을 기다립니다.
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log("장소 Idx로 조회가 실패했습니다. " + request.responseCode);
+           
+        }
+        else
+        {
+            byte[] results = request.downloadHandler.data;
+            var message = Encoding.UTF8.GetString(results);
+            Debug.Log(message);     //응답했다.
+
+            InsObjectResponse ins = (InsObjectResponse)JsonUtility.FromJson<InsObjectResponse>(message);
+            List<DamageObjectTypeDto> list1 = new List<DamageObjectTypeDto>(ins.data);
+            
+            o_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>();
+            o_Dropdown.ClearOptions();
+
+            t_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
+            t_Dropdown.ClearOptions();
+
+            foreach (DamageObjectTypeDto c in list1)
+            {
+                Dropdown.OptionData option = new Dropdown.OptionData();
+                option.text = c.object_name_en;
+                o_Dropdown.options.Add(option);
+            }
+            o_Dropdown.value=-1;
+        }
+    }
+    private IEnumerator InsTypeIdx(string uri,string data)
+    {
+        var url = string.Format("{0}/{1}", serverPath, uri);
+
+         var request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
+       
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        
+        request.SetRequestHeader("Content-Type", "application/json");
+
+          //응답을 기다립니다.
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log("객체 Idx로 조회가 실패했습니다. " + request.responseCode);
+           
+        }
+        else
+        {
+            byte[] results = request.downloadHandler.data;
+            var message = Encoding.UTF8.GetString(results);
+            Debug.Log(message);     //응답했다.
+
+            InsTypeResponse ins = (InsTypeResponse)JsonUtility.FromJson<InsTypeResponse>(message);
+            List<DamageTypeDto> list1 = new List<DamageTypeDto>(ins.data);
+            
+            t_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
+            t_Dropdown.ClearOptions();
+            
+            foreach (DamageTypeDto c in list1)
+            {
+                Dropdown.OptionData option = new Dropdown.OptionData();
+                option.text = c.damage_name_en;
+                t_Dropdown.options.Add(option);
+            }
+            t_Dropdown.value=-1;
+        }
+    }
+
     public void OnQuit()
     {
         #if UNITY_EDITOR
