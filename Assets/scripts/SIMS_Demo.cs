@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Text;
 using UnityEngine.Android;
+using Jacovone.AssetBundleMagic;
 
 [System.Serializable]
 public class Model
@@ -18,6 +19,32 @@ public class Model
     public int model_id;
     public string model_3dfile;
     public string model_2dfile;
+    
+}
+
+[System.Serializable]
+public class ModelDto
+{
+    public int idx;
+    public int model_id;
+    public string model_3dfile_name;
+    public string model_3dfile;
+    public string model_3dfile_type;
+    public string model_3dfile_size;
+    public string model_2dfile_name;
+    public string model_2dfile;
+    public string model_2dfile_type;
+    public string model_2dfile_size;
+    public byte[] model_3dbytes;
+    public byte[] model_2dbytes;
+}
+
+[System.Serializable]
+public class ModelResponse
+{
+    public string api_result;
+    public string err_message;
+    public List<ModelDto> data = new List<ModelDto>();
 }
 
 [System.Serializable]
@@ -125,8 +152,8 @@ public class DamageTypeDto
 }
 public class SIMS_Demo : MonoBehaviour
 {
-    //private string serverPath = "http://localhost:8080";
-    private string serverPath = "http://14.7.197.84:8080";
+    private string serverPath = "http://localhost:8080";
+    //private string serverPath = "http://14.7.197.151:8080";
 
     private string serverPort = "8080";
 
@@ -156,12 +183,14 @@ public class SIMS_Demo : MonoBehaviour
             StartCoroutine("CheckPermissionAndroid");
         }
         SimsLog(Application.persistentDataPath);
+        OnClick_ModelInstantiate();
+        
     }
 
     private void UpdateServerIpPort()
     {
-        //string ip = "localhost";
-        string ip = "14.7.197.84";
+        string ip = "localhost";
+        //string ip = "14.7.197.151";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -273,6 +302,13 @@ public class SIMS_Demo : MonoBehaviour
         UpdateServerIpPort();
         // var json = JsonConvert.SerializeObject(new Inspection(SingletonModelIdx.instance.ModelIdx));
         InsModelIdx("inspection/select_modelidx"); 
+    }
+
+    public void OnClick_ModelInstantiate()
+    {
+        UpdateServerIpPort();
+       string json = "{\"idx\" : " + SingletonModelIdx.instance.ModelIdx + "}";
+        StartCoroutine(InsModel("model/select_idx",json));
     }
 
     public void OnClick_InsObjectList()
@@ -659,7 +695,7 @@ public class SIMS_Demo : MonoBehaviour
             byte[] results = request.downloadHandler.data;
             var message = Encoding.UTF8.GetString(results);
             Debug.Log(message);     //응답했다.
-
+            
             InsObjectResponse ins = (InsObjectResponse)JsonUtility.FromJson<InsObjectResponse>(message);
             List<DamageObjectTypeDto> list1 = new List<DamageObjectTypeDto>(ins.data);
             
@@ -719,6 +755,62 @@ public class SIMS_Demo : MonoBehaviour
             t_Dropdown.value=-1;
         }
     }
+
+
+
+    private IEnumerator InsModel(string uri,string data)
+    {
+        var url = string.Format("{0}/{1}", serverPath, uri);
+
+         var request = new UnityWebRequest(url, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
+       
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        
+        request.SetRequestHeader("Content-Type", "application/json");
+
+          //응답을 기다립니다.
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log("객체 Idx로 조회가 실패했습니다. " + request.responseCode);
+           
+        }
+        else
+        {
+            byte[] results = request.downloadHandler.data;
+            var message = Encoding.UTF8.GetString(results);
+            Debug.Log(message);     //응답했다.
+
+            ModelResponse jObjText = (ModelResponse)JsonUtility.FromJson<ModelResponse>(message);
+            List<ModelDto> list = new List<ModelDto>(jObjText.data);
+
+            Transform points = GameObject.Find("StartModelPoint").GetComponent<Transform>();
+            string[] msg = list[0].model_3dfile_name.Split('.');
+
+            AssetBundleMagic.DownloadBundle(msg[0],
+            delegate(AssetBundle ab){
+                Instantiate (ab.LoadAsset(msg[0]), points.position, points.rotation);
+            },
+            delegate(string error){
+                Debug.LogError(error);
+            });
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void OnQuit()
     {
