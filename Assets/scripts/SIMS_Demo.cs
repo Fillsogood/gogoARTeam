@@ -152,8 +152,8 @@ public class DamageTypeDto
 }
 public class SIMS_Demo : MonoBehaviour
 {
-    private string serverPath = "http://localhost:8080";
-    //private string serverPath = "http://14.7.197.151:8080";
+    //private string serverPath = "http://localhost:8080";
+    private string serverPath = "http://14.7.197.129:8080";
 
     private string serverPort = "8080";
 
@@ -189,8 +189,8 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        string ip = "localhost";
-        //string ip = "14.7.197.151";
+        //string ip = "localhost";
+        string ip = "14.7.197.129";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -787,30 +787,22 @@ public class SIMS_Demo : MonoBehaviour
             ModelResponse jObjText = (ModelResponse)JsonUtility.FromJson<ModelResponse>(message);
             List<ModelDto> list = new List<ModelDto>(jObjText.data);
 
-            Transform points = GameObject.Find("StartModelPoint").GetComponent<Transform>();
             string[] msg = list[0].model_3dfile_name.Split('.');
 
+            Transform points = GameObject.Find("StartModelPoint").GetComponent<Transform>();
+            GameObject Building= Resources.Load<GameObject>("BuildingPrefab/" + msg[0]);
+            GameObject Instance = (GameObject) Instantiate(Building, points.position, points.rotation );
+
+            /* AssetBundleMagic
             AssetBundleMagic.DownloadBundle(msg[0],
             delegate(AssetBundle ab){
                 Instantiate (ab.LoadAsset(msg[0]), points.position, points.rotation);
             },
             delegate(string error){
                 Debug.LogError(error);
-            });
+            });*/
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void OnQuit()
     {
