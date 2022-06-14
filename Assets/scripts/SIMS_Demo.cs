@@ -155,8 +155,8 @@ public class DamageTypeDto
 
 public class SIMS_Demo : MonoBehaviour
 {
-    //private string serverPath = "http://localhost:8080";
-    private string serverPath = "http://14.7.197.215:8080";
+    private string serverPath = "http://localhost:8080";
+    //private string serverPath = "http://14.7.197.215:8080";
     private string serverPort = "8080";
 
     private Inspection _Ins = new Inspection();
@@ -188,8 +188,8 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        //string ip = "localhost";
-        string ip = "14.7.197.215";
+        string ip = "localhost";
+        //string ip = "14.7.197.215";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -207,7 +207,7 @@ public class SIMS_Demo : MonoBehaviour
 
     private void SimsLog(string text)
     {
-        GameObject.Find("afas").GetComponent<Text>().text += text + "\n";
+        //GameObject.Find("afas").GetComponent<Text>().text += text + "\n";
         
     }
 

@@ -25,9 +25,9 @@ public class GyroScopeCtr : MonoBehaviour
         Capsule.transform.position =this.transform.position;
         this.transform.parent = Capsule.transform;       
         Input.gyro.enabled=true;
-        xText = GameObject.Find("Canvas").transform.Find("XText");
+        xText = GameObject.Find("MobileUX").transform.Find("XText");
         x=xText.GetComponent<Text>();
-        yText = GameObject.Find("Canvas").transform.Find("YText");
+        yText = GameObject.Find("MobileUX").transform.Find("YText");
         y=yText.GetComponent<Text>();
     }
 
