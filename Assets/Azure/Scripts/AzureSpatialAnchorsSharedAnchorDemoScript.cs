@@ -39,22 +39,22 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 
         private readonly Dictionary<AppState, DemoStepParams> stateParams = new Dictionary<AppState, DemoStepParams>
         {
-            { AppState.DemoStepChooseFlow,new DemoStepParams() { StepMessage = "Next: Choose your Demo Flow", StepColor = Color.clear }},
+            { AppState.DemoStepChooseFlow,new DemoStepParams() { StepMessage = "Next: Please Touch the Save Defect Button", StepColor = Color.clear }},
             { AppState.DemoStepInputAnchorNumber,new DemoStepParams() { StepMessage = "Next: Input anchor number", StepColor = Color.clear }},
-            { AppState.DemoStepCreateSession,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession", StepColor = Color.clear }},
-            { AppState.DemoStepConfigSession,new DemoStepParams() { StepMessage = "Next: Configure CloudSpatialAnchorSession", StepColor = Color.clear }},
-            { AppState.DemoStepStartSession,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession", StepColor = Color.clear }},
-            { AppState.DemoStepCreateLocalAnchor,new DemoStepParams() { StepMessage = "Tap a surface to add the local anchor.", StepColor = Color.red }},
-            { AppState.DemoStepSaveCloudAnchor,new DemoStepParams() { StepMessage = "Next: Save local anchor to cloud", StepColor = Color.yellow }},
-            { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving local anchor to cloud...", StepColor = Color.yellow }},
-            { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Stop cloud anchor session", StepColor = Color.red }},
+            { AppState.DemoStepCreateSession,new DemoStepParams() { StepMessage = "Next: Create Defect in AR, Please Touch the Next Button", StepColor = Color.clear }},
+            { AppState.DemoStepConfigSession,new DemoStepParams() { StepMessage = "Next: Configure Cloud Session, Please Touch the Next Button", StepColor = Color.clear }},
+            { AppState.DemoStepStartSession,new DemoStepParams() { StepMessage = "Next: Start Cloud Defect Saving", StepColor = Color.clear }},
+            { AppState.DemoStepCreateLocalAnchor,new DemoStepParams() { StepMessage = "Tap a surface to add the Defect in AR.", StepColor = Color.red }},
+            { AppState.DemoStepSaveCloudAnchor,new DemoStepParams() { StepMessage = "Next: Save Defect to cloud", StepColor = Color.yellow }},
+            { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving Defect to cloud...", StepColor = Color.yellow }},
+            { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Save Complete", StepColor = Color.red }},
             { AppState.DemoStepDestroySession,new DemoStepParams() { StepMessage = "Next: Destroy Cloud Anchor session", StepColor = Color.clear }},
             { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession for query", StepColor = Color.clear }},
             { AppState.DemoStepStartSessionForQuery,new DemoStepParams() { StepMessage = "Next: Start CloudSpatialAnchorSession for query", StepColor = Color.clear }},
             { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchor", StepColor = Color.clear }},
             { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchor...", StepColor = Color.clear }},
             { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop CloudSpatialAnchorSession for query", StepColor = Color.yellow }},
-            { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Restart demo", StepColor = Color.red }}
+            { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Touch the Next Button to continue saving", StepColor = Color.red }}
         };
 
         #if !UNITY_EDITOR
@@ -473,7 +473,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
 
                     #else
-                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Create & Share Anchor";
+                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Save Defect";
                     #endif
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(false);
                     break;
@@ -482,13 +482,24 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 //     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
                 //     //XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(true);
                 //     break;
+                // case AppState.DemoStepComplete:
+                //     GameObject DefectBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("DefectBtn").gameObject;
+                //     DefectBtn.SetActive(true);
+                //     GameObject CreateFlowText = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowText").gameObject;
+                //     CreateFlowText.SetActive(false);
+                //     GameObject CreateFlowButton = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowButton").gameObject;
+                //     CreateFlowButton.SetActive(false);
+                //     break;
                 default:
                     //XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[1].gameObject.SetActive(false);
                     #if UNITY_WSA
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(false);
                     #else
-                    XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
+                    if(GameObject.Find("DefectBtn").activeSelf == false)
+                    {
+                        XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].gameObject.SetActive(true);
                     XRUXPickerForSharedAnchorDemo.Instance.GetDemoButtons()[0].transform.Find("Text").GetComponent<Text>().text = "Next Step";
+                    }
                     #endif
                     //XRUXPickerForSharedAnchorDemo.Instance.GetDemoInputField().gameObject.SetActive(false);
                     break;

@@ -24,7 +24,7 @@ public class CameraTake : MonoBehaviour
                     return;
                 }
                //GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("ifPicturePath").GetComponent<InputField>().text = path;
-               GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text = path;
+               GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text = path;
                
             }
         }, maxSize);

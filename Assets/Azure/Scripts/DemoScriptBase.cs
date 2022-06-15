@@ -461,7 +461,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                     // such as storing the key in the AnchorExchanger
                     await OnSaveCloudAnchorSuccessfulAsync();
                     spawnedObject = null;
-                    
+
                 }
                 else
                 {

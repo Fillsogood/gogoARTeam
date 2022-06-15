@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using TMPro;
 public class DefectCtr : MonoBehaviour
 {
     void Start()
@@ -23,24 +24,33 @@ public class DefectCtr : MonoBehaviour
 
     public void OnPanel()
     {         
-        Transform DefectSaveBtn = GameObject.Find("Canvas").transform.Find("panel_Inspection");
+        Transform DefectSaveBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
         DefectSaveBtn.gameObject.SetActive(true);
-        GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("txtGyroValue").GetComponent<Text>().text=GyroScopeCtr.GetGyroData();
+        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("txtGyroValue").GetComponent<Text>().text=GyroScopeCtr.GetGyroData();
     }
     
     public void OnSave()
     {
         ClearDataInspection();
-        Transform DefectSaveBtn = GameObject.Find("Canvas").transform.Find("panel_Inspection");
+        Transform DefectSaveBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
         DefectSaveBtn.gameObject.SetActive(false);
         SaveDefect();
+
+        // GameObject ARStateText = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowText").gameObject;
+        // GameObject ARButton = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowButton").gameObject;
+        // GameObject DefectBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("DefectBtn").gameObject;
+        // ARStateText.SetActive(true);
+        // ARButton.SetActive(true);
+        // DefectBtn.SetActive(false);
+       
+       
     }
      public void ClearDataInspection()
     {
-        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = "";
-        GameObject.Find("ifinspector_etc").GetComponent<InputField>().text ="";
-        GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
-        GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
+        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifInsInspector").GetComponent<InputField>().text = "";
+        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifinspector_etc").GetComponent<TMP_InputField>().text ="";
+        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
+        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
         //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
     }
 

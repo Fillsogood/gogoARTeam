@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-
+using TMPro;
 using Newtonsoft.Json; 
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -155,8 +155,8 @@ public class DamageTypeDto
 
 public class SIMS_Demo : MonoBehaviour
 {
-    private string serverPath = "http://localhost:8080";
-    //private string serverPath = "http://14.7.197.215:8080";
+    //private string serverPath = "http://localhost:8080";
+    private string serverPath = "http://112.157.106.35:8080";
     private string serverPort = "8080";
 
     private Inspection _Ins = new Inspection();
@@ -188,8 +188,8 @@ public class SIMS_Demo : MonoBehaviour
 
     private void UpdateServerIpPort()
     {
-        string ip = "localhost";
-        //string ip = "14.7.197.215";
+        //string ip = "localhost";
+        string ip = "112.157.106.35";
         string port = "8080";
 
         if (ip == "" || port == "")
@@ -216,13 +216,13 @@ public class SIMS_Demo : MonoBehaviour
         UpdateServerIpPort();
 
         _Ins.model_idx = SingletonModelIdx.instance.ModelIdx;
-        _Ins.inspector_name = GameObject.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
-        _Ins.inspector_etc = GameObject.Find("ifinspector_etc").GetComponent<InputField>().text.ToString();
+        _Ins.inspector_name = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
+        _Ins.inspector_etc = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifinspector_etc").GetComponent<TMP_InputField>().text.ToString();
         GameObject Capsule = GameObject.Find("Capsule");
         Vector3 pos = Capsule.transform.position;
         try
         {
-            _Ins.damage_space = (GameObject.Find("DdSpace").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_space = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value)+1;
         }
         catch (FormatException)
         {
@@ -230,7 +230,7 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_type = (GameObject.Find("DdDamageType").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_type = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>().value)+1;
         }
         catch (FormatException)
         {
@@ -238,7 +238,7 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_object = (GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_object = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value)+1;
         }
         catch (FormatException)
         {
@@ -269,18 +269,9 @@ public class SIMS_Demo : MonoBehaviour
             _Ins.damage_loc_z = -1;
         }
 
-        _Ins.ins_image_name = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text;
+        _Ins.ins_image_name = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text;
 
         //Debug.Log("Inspection DB : " + _Ins.idx.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector_name + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.ins_image_name);
-    }
-
-    private void UpdateDataForm()
-    {
-        GameObject.Find("ifInsInspector").GetComponent<InputField>().text = _Ins.inspector_name;
-        GameObject.Find("ifinspector_etc").GetComponent<InputField>().text = _Ins.inspector_etc;
-        GameObject.Find("DdSpace").GetComponent<Dropdown>().value = _Ins.damage_space-1;
-        GameObject.Find("DdDamageType").GetComponent<Dropdown>().value = _Ins.damage_type-1;
-        GameObject.Find("DdDamageObject").GetComponent<Dropdown>().value = _Ins.damage_object-1;
     }
 
     public void OnClick_InsInsert()
@@ -309,7 +300,7 @@ public class SIMS_Demo : MonoBehaviour
     {   
         UpdateServerIpPort();
 
-        s_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>();
+        s_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>();
         int val = s_Dropdown.value + 1;
         string postData ="{\"space_idx\" : " + val + "}";
 
@@ -319,8 +310,8 @@ public class SIMS_Demo : MonoBehaviour
     public void OnClick_InsTypeList()
     {   
         UpdateServerIpPort();
-        int s_Dd = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value+1;
-        int o_Dd = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value+1;
+        int s_Dd = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value+1;
+        int o_Dd = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value+1;
         //object
         int obj_Idx = 0 ;
 
@@ -425,9 +416,9 @@ public class SIMS_Demo : MonoBehaviour
         }
         
         formData.Add(new MultipartFormDataSection("inspector_name", _Ins.inspector_name != "" ? _Ins.inspector_name : "-1"));
-        formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x > -1 ? _Ins.damage_loc_x.ToString() : "-1"));
-        formData.Add(new MultipartFormDataSection("damage_loc_y", _Ins.damage_loc_y > -1 ? _Ins.damage_loc_y.ToString() : "-1"));
-        formData.Add(new MultipartFormDataSection("damage_loc_z", _Ins.damage_loc_z > -1 ? _Ins.damage_loc_z.ToString() : "-1"));
+        formData.Add(new MultipartFormDataSection("damage_loc_x", _Ins.damage_loc_x.ToString()));
+        formData.Add(new MultipartFormDataSection("damage_loc_y", _Ins.damage_loc_y.ToString()));
+        formData.Add(new MultipartFormDataSection("damage_loc_z", _Ins.damage_loc_z.ToString()));
         formData.Add(new MultipartFormDataSection("inspector_etc", _Ins.inspector_etc != "" ? _Ins.inspector_etc : "-1"));
 
         //object
@@ -693,10 +684,10 @@ public class SIMS_Demo : MonoBehaviour
             InsObjectResponse ins = (InsObjectResponse)JsonUtility.FromJson<InsObjectResponse>(message);
             List<DamageObjectTypeDto> list1 = new List<DamageObjectTypeDto>(ins.data);
             
-            o_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>();
+            o_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>();
             o_Dropdown.ClearOptions();
 
-            t_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
+            t_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
             t_Dropdown.ClearOptions();
 
             foreach (DamageObjectTypeDto c in list1)
@@ -737,7 +728,7 @@ public class SIMS_Demo : MonoBehaviour
             InsTypeResponse ins = (InsTypeResponse)JsonUtility.FromJson<InsTypeResponse>(message);
             List<DamageTypeDto> list1 = new List<DamageTypeDto>(ins.data);
             
-            t_Dropdown = GameObject.Find("Canvas").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
+            t_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
             t_Dropdown.ClearOptions();
             
             foreach (DamageTypeDto c in list1)
@@ -823,17 +814,17 @@ public class SIMS_Demo : MonoBehaviour
 
     public void Back()
     {
-       Transform back = GameObject.Find("Canvas").transform.Find("panel_Inspection");
+       Transform back = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
         back.gameObject.SetActive(false);
     }
 
     private void On_List()
     {
-        Transform On_Panel = GameObject.Find("Canvas").transform.Find("List_Panel");
+        Transform On_Panel = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_Panel");
         On_Panel.gameObject.SetActive(true);
-        Transform On_btn = GameObject.Find("Canvas").transform.Find("List_on_btn");
+        Transform On_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_on_btn");
         On_btn.gameObject.SetActive(false);
-        Transform Off_btn = GameObject.Find("Canvas").transform.Find("List_off_btn");
+        Transform Off_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_off_btn");
         Off_btn.gameObject.SetActive(true);
 
     }
@@ -846,11 +837,11 @@ public class SIMS_Demo : MonoBehaviour
             Destroy(GameObject.Find("item"+count));
             count++;
         }
-        Transform On_Panel = GameObject.Find("Canvas").transform.Find("List_Panel");
+        Transform On_Panel = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_Panel");
         On_Panel.gameObject.SetActive(false);
-        Transform On_btn = GameObject.Find("Canvas").transform.Find("List_on_btn");
+        Transform On_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_on_btn");
         On_btn.gameObject.SetActive(true);
-        Transform Off_btn = GameObject.Find("Canvas").transform.Find("List_off_btn");
+        Transform Off_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_off_btn");
         Off_btn.gameObject.SetActive(false);
     }
 }
