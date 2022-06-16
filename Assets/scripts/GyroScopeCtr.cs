@@ -18,17 +18,21 @@ public class GyroScopeCtr : MonoBehaviour
     Transform panel;
     Vector3 m_PlayerRot;
     static double GyroRotY;
+    Text ARText;
 
     void Start()
     {
         Capsule =new GameObject("Capsule");
         Capsule.transform.position =this.transform.position;
-        this.transform.parent = Capsule.transform;       
+        this.transform.parent = Capsule.transform;
         Input.gyro.enabled=true;
+
         xText = GameObject.Find("MobileUX").transform.Find("XText");
         x=xText.GetComponent<Text>();
         yText = GameObject.Find("MobileUX").transform.Find("YText");
         y=yText.GetComponent<Text>();
+
+        ARText = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowText").GetComponent<Text>();
     }
 
     protected void Update()
@@ -50,30 +54,38 @@ public class GyroScopeCtr : MonoBehaviour
 
     void FixedUpdate()
     {
-        AddRigidbody();
-        if(average()>=0.0612304173409939 && average()<=0.09&&!isBorder)
+        //AR 앵커 저장 전, 저장 후에만 움직임
+        if(ARText.text == "Next: Please Touch the Save Defect Button" || ARText.text == "Next: Touch the Save Defect Button to continue saving")
         {
-            //이동
-            Capsule.transform.Translate(-speed,0,0); 
-        }
-        else if(average()>=-0.00394487800076604||average()<=0.00479192985221744 &&!isBorder)
-        {
-           //멈추고 돌때...
-        }      
+            AddRigidbody();
+            if(average()>=0.0612304173409939 && average()<=0.09&&!isBorder)
+            {
+                //이동
+                Capsule.transform.Translate(-speed,0,0); 
+            }
+            else if(average()>=-0.00394487800076604||average()<=0.00479192985221744 &&!isBorder)
+            {
+                //멈추고 돌때...
+            }      
 
-        if(isTri)
+            // if(isTri)
+            // {
+            //     panel = GameObject.Find("Canvas").transform.Find("DefectUpdateBtn");
+            //     panel.gameObject.SetActive(true);
+            //     if(Capsule.GetComponent<Rigidbody>()==null)
+            //     {
+            //         Capsule.AddComponent<Rigidbody>();   
+            //     }
+            //     else
+            //     {
+            //         rb = Capsule.GetComponent<Rigidbody>();
+            //         rb.freezeRotation =true;
+            //     }
+            // }
+        }
+        else
         {
-            panel = GameObject.Find("Canvas").transform.Find("DefectUpdateBtn");
-            panel.gameObject.SetActive(true);
-            if(Capsule.GetComponent<Rigidbody>()==null)
-            {
-                Capsule.AddComponent<Rigidbody>();   
-            }
-            else
-            {
-                rb = Capsule.GetComponent<Rigidbody>();
-                rb.freezeRotation =true;
-            }
+            //AR 애져앵커 저장 중에는 캡슐이 움직이지 않음
         }
     }
     

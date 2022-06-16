@@ -11,6 +11,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
 {
     public class AzureSpatialAnchorsSharedAnchorDemoScript : DemoScriptBase
     {
+
         internal enum AppState
         {
             DemoStepChooseFlow = 0,
@@ -41,12 +42,12 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
         {
             { AppState.DemoStepChooseFlow,new DemoStepParams() { StepMessage = "Next: Please Touch the Save Defect Button", StepColor = Color.clear }},
             { AppState.DemoStepInputAnchorNumber,new DemoStepParams() { StepMessage = "Next: Input anchor number", StepColor = Color.clear }},
-            { AppState.DemoStepCreateSession,new DemoStepParams() { StepMessage = "Next: Create Defect in AR, Please Touch the Next Button", StepColor = Color.clear }},
-            { AppState.DemoStepConfigSession,new DemoStepParams() { StepMessage = "Next: Configure Cloud Session, Please Touch the Next Button", StepColor = Color.clear }},
-            { AppState.DemoStepStartSession,new DemoStepParams() { StepMessage = "Next: Start Cloud Defect Saving", StepColor = Color.clear }},
-            { AppState.DemoStepCreateLocalAnchor,new DemoStepParams() { StepMessage = "Tap a surface to add the Defect in AR.", StepColor = Color.red }},
-            { AppState.DemoStepSaveCloudAnchor,new DemoStepParams() { StepMessage = "Next: Save Defect to cloud", StepColor = Color.yellow }},
-            { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving Defect to cloud...", StepColor = Color.yellow }},
+            { AppState.DemoStepCreateSession,new DemoStepParams() { StepMessage = "Next: Create Defect in AR, Please Touch the Save Defect Button", StepColor = Color.clear }},       //
+            { AppState.DemoStepConfigSession,new DemoStepParams() { StepMessage = "Next: Configure Cloud Session, Please Touch the Save Defect Button", StepColor = Color.clear }},    //
+            { AppState.DemoStepStartSession,new DemoStepParams() { StepMessage = "Next: Start Cloud Defect Saving", StepColor = Color.clear }},  ///
+            { AppState.DemoStepCreateLocalAnchor,new DemoStepParams() { StepMessage = "Tap a surface to add the Defect in AR.", StepColor = Color.red }},  ///
+            { AppState.DemoStepSaveCloudAnchor,new DemoStepParams() { StepMessage = "Next: Save Defect to cloud", StepColor = Color.yellow }},//
+            { AppState.DemoStepSavingCloudAnchor,new DemoStepParams() { StepMessage = "Saving Defect to cloud...", StepColor = Color.yellow }},//
             { AppState.DemoStepStopSession,new DemoStepParams() { StepMessage = "Next: Save Complete", StepColor = Color.red }},
             { AppState.DemoStepDestroySession,new DemoStepParams() { StepMessage = "Next: Destroy Cloud Anchor session", StepColor = Color.clear }},
             { AppState.DemoStepCreateSessionForQuery,new DemoStepParams() { StepMessage = "Next: Create CloudSpatialAnchorSession for query", StepColor = Color.clear }},
@@ -54,12 +55,14 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             { AppState.DemoStepLookForAnchor,new DemoStepParams() { StepMessage = "Next: Look for anchor", StepColor = Color.clear }},
             { AppState.DemoStepLookingForAnchor,new DemoStepParams() { StepMessage = "Looking for anchor...", StepColor = Color.clear }},
             { AppState.DemoStepStopSessionForQuery,new DemoStepParams() { StepMessage = "Next: Stop CloudSpatialAnchorSession for query", StepColor = Color.yellow }},
-            { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Touch the Next Button to continue saving", StepColor = Color.red }}
+            { AppState.DemoStepComplete,new DemoStepParams() { StepMessage = "Next: Touch the Save Defect Button to continue saving", StepColor = Color.red }} //
         };
 
         #if !UNITY_EDITOR
         public AnchorExchanger anchorExchanger = new AnchorExchanger();
         #endif
+
+
 
         #region Member Variables
         private AppState _currentAppState = AppState.DemoStepChooseFlow;
@@ -101,6 +104,24 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             }
         }
 
+        
+    // public static AzureSpatialAnchorsSharedAnchorDemoScript instance = null;
+
+    // // Start is called before the first frame update
+    // void Awake()
+    // {
+    //     if (instance == null) //instance가 null. 즉, 시스템상에 존재하고 있지 않을때 
+    //     { 
+    //         instance = this; //내자신을 instance로 넣어줍니다.
+    //         DontDestroyOnLoad(gameObject); //OnLoad(씬이 로드 되었을때) 자신을 파괴하지 않고 유지 
+    //     } 
+    //     else 
+    //     { 
+    //         if (instance != this) //instance가 내가 아니라면 이미 instance가 하나 존재하고 있다는 의미 
+    //             Destroy(this.gameObject); //둘 이상 존재하면 안되는 객체이니 방금 AWake된 자신을 삭제 
+    //     }
+    // }
+
         protected override void OnCloudAnchorLocated(AnchorLocatedEventArgs args)
         {
             base.OnCloudAnchorLocated(args);
@@ -129,6 +150,7 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
                 });
             }
         }
+
 
         /// <summary>
         /// Start is called on the frame when a script is enabled just before any

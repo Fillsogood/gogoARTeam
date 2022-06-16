@@ -3,8 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using Microsoft.Azure.SpatialAnchors.Unity.Examples;
+
+namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
+{
+
 public class DefectCtr : MonoBehaviour
 {
+    
     void Start()
     {
         Input.gyro.enabled=true;
@@ -54,5 +60,7 @@ public class DefectCtr : MonoBehaviour
         //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
     }
 
+
+}
 
 }
