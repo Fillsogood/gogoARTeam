@@ -100,6 +100,7 @@ public class Inspection
 	public string ad_image_size;
 	public string ad_image_type;
 	public byte[] ad_bytes;
+    public int rowkey;
 }
 
 [System.Serializable]
@@ -133,6 +134,7 @@ public class InspectionDto
     public string state_name;
 	public byte[] ins_bytes; 
 	public byte[] ad_bytes;
+    public int rowkey;
 }
 
 [System.Serializable]
@@ -540,6 +542,9 @@ public class SIMS_Demo : MonoBehaviour
             yield break;
         } 
         formData.Add(new MultipartFormFileSection("file", img, Path.GetFileName(path_image), strImgformat));
+
+        string RowKey = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("RowKeyText").GetComponent<Text>().text;
+        formData.Add(new MultipartFormDataSection("rowkey", RowKey != "-1" ? RowKey : "-1"));
 
         UnityWebRequest www = UnityWebRequest.Post(url, formData);
         //www.SetRequestHeader("Content-Type", "multipart/form-data");

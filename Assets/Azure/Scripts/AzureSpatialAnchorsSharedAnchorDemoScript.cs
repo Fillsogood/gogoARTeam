@@ -236,6 +236,9 @@ namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
             {
                 tm.text = $"Failed to store the anchor key using '{BaseSharingUrl}'";
             }
+
+            GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("RowKeyText").GetComponent<Text>().text = dataToAttach.ToString();
+            
             tm.fontSize = 32;
             go.transform.SetParent(parentObject.transform, false);
             go.transform.localPosition = Vector3.one * 0.25f;
