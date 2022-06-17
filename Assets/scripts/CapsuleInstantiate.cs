@@ -10,5 +10,4 @@ public class CapsuleInstantiate : MonoBehaviour
         GameObject Capsule= Resources.Load<GameObject>("DefectPrefab/Capsule");  
         GameObject Instance2 = (GameObject) Instantiate(Capsule, points.position, points.rotation );
     }
-
 }

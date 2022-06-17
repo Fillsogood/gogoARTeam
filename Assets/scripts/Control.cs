@@ -5,16 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class Control : MonoBehaviour
 {
+    public GameObject MiniMap;
+    public GameObject Scrollbar;
+    public GameObject Switch_on_btn;
+    public GameObject Switch_off_btn;
+    public GameObject MapDefectBtn;
     public string model_name { get; set; }
 
     public void On_Ar()
     {
-        GameObject Map = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("MiniMap").gameObject;
-        GameObject scroll = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Scrollbar").gameObject;
-        Transform On = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Switch_on_btn");
-        Transform Off = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Switch_off_btn");
-        Transform MapDefectBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("MapDefectBtn");
-
         Transform model = GameObject.Find(model_name + "(Clone)").transform;
         Transform[] children = new Transform[model.childCount];
 
@@ -24,21 +23,15 @@ public class Control : MonoBehaviour
             children[i].gameObject.SetActive(false);
         }
 
-        Map.SetActive(false);
-        scroll.SetActive(false);
-        On.gameObject.SetActive(false);
-        Off.gameObject.SetActive(true);
-        MapDefectBtn.gameObject.SetActive(false);
+        MiniMap.SetActive(false);
+        Scrollbar.SetActive(false);
+        Switch_on_btn.SetActive(false);
+        Switch_off_btn.SetActive(true);
+        MapDefectBtn.SetActive(false);
     }
 
     public void Off_Ar()
     {
-        GameObject Map = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("MiniMap").gameObject;
-        GameObject scroll = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Scrollbar").gameObject;
-        Transform On = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Switch_on_btn");
-        Transform Off = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("Switch_off_btn");
-        Transform MapDefectBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("MapDefectBtn");
-
         Transform model = GameObject.Find(model_name + "(Clone)").transform;
         Transform[] children = new Transform[model.childCount];
 
@@ -48,10 +41,10 @@ public class Control : MonoBehaviour
             children[i].gameObject.SetActive(true);
         }
 
-        Map.SetActive(true);
-        scroll.SetActive(true);
-        On.gameObject.SetActive(true);
-        Off.gameObject.SetActive(false);   
-        MapDefectBtn.gameObject.SetActive(true);
+        MiniMap.SetActive(true);
+        Scrollbar.SetActive(true);
+        Switch_on_btn.SetActive(true);
+        Switch_off_btn.SetActive(false);   
+        MapDefectBtn.SetActive(true);
     }
 }

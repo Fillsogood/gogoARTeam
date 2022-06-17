@@ -163,20 +163,23 @@ public class SIMS_Demo : MonoBehaviour
 
     private Inspection _Ins = new Inspection();
     private Model _model = new Model();
+    
+    public InputField ifInsInspector;
+    public TMP_InputField ifinspector_etc;
+    public Dropdown DdSpace;
+    public Dropdown DdDamageObject;
+    public Dropdown DdDamageType;
+    public Text txtImagepath;
 
-    public static string strToEdit = "";
-    private bool isConsoleShowing = true;
+    public GameObject panel_Inspection;
+    public GameObject List_Panel;
+    public GameObject List_on_btn;
+    public GameObject List_off_btn;
+    public Transform StartModelPoint;
 
-    private float ta_left;
-    private float ta_top;
-    private float ta_width;
-    private float ta_height;
+    private List<string> m_DropOptions = new List<string>();
 
     private int listCount;
-    Dropdown s_Dropdown;
-    Dropdown o_Dropdown;
-    Dropdown t_Dropdown;
-    List<string> m_DropOptions = new List<string>();
     
     void Start()
     {
@@ -185,7 +188,7 @@ public class SIMS_Demo : MonoBehaviour
             StartCoroutine("CheckPermissionAndroid");
         }
         SimsLog(Application.persistentDataPath);
-        OnClick_ModelInstantiate();
+        Start_ModelInstantiate();
     }
 
     private void UpdateServerIpPort()
@@ -210,7 +213,6 @@ public class SIMS_Demo : MonoBehaviour
     private void SimsLog(string text)
     {
         //GameObject.Find("afas").GetComponent<Text>().text += text + "\n";
-        
     }
 
     private void UpdateDataInspection()
@@ -218,13 +220,15 @@ public class SIMS_Demo : MonoBehaviour
         UpdateServerIpPort();
 
         _Ins.model_idx = SingletonModelIdx.instance.ModelIdx;
-        _Ins.inspector_name = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifInsInspector").GetComponent<InputField>().text.ToString();
-        _Ins.inspector_etc = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifinspector_etc").GetComponent<TMP_InputField>().text.ToString();
+        _Ins.inspector_name = ifInsInspector.text.ToString();
+        _Ins.inspector_etc = ifinspector_etc.text.ToString();
+
         GameObject Capsule = GameObject.Find("Capsule");
+
         Vector3 pos = Capsule.transform.position;
         try
         {
-            _Ins.damage_space = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_space = (DdSpace.value)+1;
         }
         catch (FormatException)
         {
@@ -232,7 +236,7 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_type = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_type = (DdDamageObject.value)+1;
         }
         catch (FormatException)
         {
@@ -240,7 +244,7 @@ public class SIMS_Demo : MonoBehaviour
         }
         try
         {
-            _Ins.damage_object = (GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value)+1;
+            _Ins.damage_object = (DdDamageType.value)+1;
         }
         catch (FormatException)
         {
@@ -271,7 +275,7 @@ public class SIMS_Demo : MonoBehaviour
             _Ins.damage_loc_z = -1;
         }
 
-        _Ins.ins_image_name = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("txtImagepath").GetComponent<Text>().text;
+        _Ins.ins_image_name = txtImagepath.text;
 
         //Debug.Log("Inspection DB : " + _Ins.idx.ToString() + "/" + _Ins.ins_date + "/" + _Ins.inspector_name + "/" + _Ins.damage_type.ToString() + "/" + _Ins.damage_object + "/" + _Ins.damage_loc_x.ToString() + "/" + _Ins.damage_loc_y.ToString() + "/" + _Ins.damage_loc_z.ToString() + "/" + _Ins.ins_image_name);
     }
@@ -291,7 +295,7 @@ public class SIMS_Demo : MonoBehaviour
         InsModelIdx("inspection/select_modelidx"); 
     }
 
-    public void OnClick_ModelInstantiate()
+    public void Start_ModelInstantiate()
     {
         UpdateServerIpPort();
         string postData ="{\"idx\" : " + SingletonModelIdx.instance.ModelIdx + "}";
@@ -302,8 +306,7 @@ public class SIMS_Demo : MonoBehaviour
     {   
         UpdateServerIpPort();
 
-        s_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>();
-        int val = s_Dropdown.value + 1;
+        int val = DdSpace.value + 1;
         string postData ="{\"space_idx\" : " + val + "}";
 
         StartCoroutine(InsObjectIdx("inspection/damageobject_select_spaceidx",postData));
@@ -312,8 +315,10 @@ public class SIMS_Demo : MonoBehaviour
     public void OnClick_InsTypeList()
     {   
         UpdateServerIpPort();
-        int s_Dd = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdSpace").GetComponent<Dropdown>().value+1;
-        int o_Dd = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value+1;
+
+        int s_Dd = DdSpace.value+1;
+        int o_Dd = DdDamageObject.value+1;
+
         //object
         int obj_Idx = 0 ;
 
@@ -340,10 +345,7 @@ public class SIMS_Demo : MonoBehaviour
             if(o_Dd == 1) obj_Idx = 12;
             else obj_Idx = 13;
         }
-        //int val = o_Dd + 1;
-        Debug.Log("s_Dd : "+ s_Dd);
-        Debug.Log("o_Dd : "+ o_Dd);
-        Debug.Log("_Ins.obj_Idx : "+ obj_Idx);
+        
         string postData ="{\"object_idx\" : " + obj_Idx + "}";
 
         StartCoroutine(InsTypeIdx("inspection/damage_select_objectidx",postData));
@@ -378,24 +380,6 @@ public class SIMS_Demo : MonoBehaviour
         }
         //string fileLocation = "/storage/emulated/0" + "/DCIM/Screenshots/"; // "mnt/sdcard/DCIM/Screenshots/";
     }
-    
-    private void ViewImage(string component_name, byte[] image_bytes)
-    {
-        GameObject imageObj = GameObject.Find(component_name);
-
-        Image image = imageObj.GetComponent<Image>();
-        image.type = Image.Type.Simple;
-        image.preserveAspect = true;
-
-        Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
-        tex.filterMode = FilterMode.Trilinear;
-        tex.LoadImage(image_bytes);
-        Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.0f), 1.0f);
-        Debug.Log(tex.width + ", " + tex.height);
-
-        //sprite.
-        image.sprite = sprite;
-    }
 
     private IEnumerator PostFormDataImage(string uri, string id, string path_image)
     {
@@ -407,7 +391,6 @@ public class SIMS_Demo : MonoBehaviour
         
         if (_Ins.model_idx > -1)
         {
-            
             formData.Add(new MultipartFormDataSection("model_idx", _Ins.model_idx.ToString()));
         }
         else
@@ -553,8 +536,8 @@ public class SIMS_Demo : MonoBehaviour
  
         if (www.result != UnityWebRequest.Result.Success)
         {
-             SimsLog("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
-             SimsLog(www.error);
+            SimsLog("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
+            SimsLog(www.error);
             Debug.Log("점검 ID " + _Ins.idx.ToString() + "이 전송이 실패했습니다. " + www.responseCode);
             Debug.Log(www.error);
         }
@@ -562,19 +545,17 @@ public class SIMS_Demo : MonoBehaviour
         {
             if (id == "")
             {
-                 SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
+                SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
                 Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 Upload(삽입) 되었습니다. " + www.responseCode);
             }
             else
             {
-                 SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
+                SimsLog("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
                 Debug.Log("점검 ID " + _Ins.idx.ToString() + "가 성공적으로 업데이트가 되었습니다. " + www.responseCode);
             }
 
             Debug.Log("Request Response: " + www.downloadHandler.text);
-            SimsLog("Request Response: " + www.downloadHandler.text);
-
-            //업로드가 완료되면 폼을 클리어한다..          
+            SimsLog("Request Response: " + www.downloadHandler.text);        
         }
     }
 
@@ -588,7 +569,7 @@ public class SIMS_Demo : MonoBehaviour
         request.Timeout = 30 * 10000; // 30초
         request.ContentType = "application/json; charset=utf-8";
 
-        string postData ="{\"idx\" : "+SingletonModelIdx.instance.ModelIdx+"}";
+        string postData ="{\"idx\" : " + SingletonModelIdx.instance.ModelIdx + "}";
         byte[] byteArray =Encoding.UTF8.GetBytes(postData);
 
         Stream dataStream = request.GetRequestStream();
@@ -601,7 +582,6 @@ public class SIMS_Demo : MonoBehaviour
             if (status != HttpStatusCode.OK)
             {
                 Debug.Log("모델 ID " + SingletonModelIdx.instance.ModelIdx + "이 조회에 실패했습니다. " + status);
-           
             }
             Stream respStream = resp.GetResponseStream();
             using (StreamReader sr = new StreamReader(respStream))
@@ -611,7 +591,7 @@ public class SIMS_Demo : MonoBehaviour
         }
 
         var jObject = JObject.Parse(responseText);
-        string data =jObject.GetValue("data").ToString();
+        string data = jObject.GetValue("data").ToString();
                
         InsResponse jObjText = (InsResponse) JsonConvert.DeserializeObject<InsResponse>(jObject.ToString());
         List<InspectionDto> list = new List<InspectionDto>(jObjText.data);
@@ -622,7 +602,7 @@ public class SIMS_Demo : MonoBehaviour
         for(int i=0; i<list.Count; i++)
         {
             var index = Instantiate(Item, new Vector3(0, yValue, 0), Quaternion.identity);
-            index.name = "item"+i;
+            index.name = "item" + i;
             index.transform.SetParent(GameObject.Find("Content").transform);
             yValue -= 200;
         }
@@ -648,18 +628,15 @@ public class SIMS_Demo : MonoBehaviour
 
             //하자 리스트 정보값 출력
             GameObject.Find("item"+count).transform.Find("ItemInsType_Text").GetComponent<Text>().text = j.space_name_en+"_"+j.object_name_en+"_"+j.damage_name_en;
-
             GameObject.Find("item"+count).transform.Find("ItemInsDate_Text").GetComponent<Text>().text = "Date : "+j.ins_date; 
-
             GameObject.Find("item"+count).transform.Find("ItemInsInspector_Text").GetComponent<Text>().text ="Inspector : "+j.inspector_name; 
-
             GameObject.Find("item"+count).transform.Find("ItemInsLoc_Text").GetComponent<Text>().text ="Location Defect : "+j.damage_loc_x+" / "+j.damage_loc_y+" / "+j.damage_loc_z; 
-
             GameObject.Find("item"+count).transform.Find("ItemInsETC_Text").GetComponent<Text>().text ="Etc : "+j.inspector_etc;
 
             count++;
         }
     }
+
     private IEnumerator InsObjectIdx(string uri,string data)
     {
         var url = string.Format("{0}/{1}", serverPath, uri);
@@ -672,13 +649,12 @@ public class SIMS_Demo : MonoBehaviour
         
         request.SetRequestHeader("Content-Type", "application/json");
 
-          //응답을 기다립니다.
+        //응답을 기다립니다.
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log("장소 Idx로 조회가 실패했습니다. " + request.responseCode);
-           
         }
         else
         {
@@ -689,26 +665,23 @@ public class SIMS_Demo : MonoBehaviour
             InsObjectResponse ins = (InsObjectResponse)JsonUtility.FromJson<InsObjectResponse>(message);
             List<DamageObjectTypeDto> list1 = new List<DamageObjectTypeDto>(ins.data);
             
-            o_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>();
-            o_Dropdown.ClearOptions();
-
-            t_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
-            t_Dropdown.ClearOptions();
+            DdDamageObject.ClearOptions();
+            DdDamageType.ClearOptions();
 
             foreach (DamageObjectTypeDto c in list1)
             {
                 Dropdown.OptionData option = new Dropdown.OptionData();
                 option.text = c.object_name_en;
-                o_Dropdown.options.Add(option);
+                DdDamageObject.options.Add(option);
             }
-            o_Dropdown.value=-1;
+            DdDamageObject.value=-1;
         }
     }
     private IEnumerator InsTypeIdx(string uri,string data)
     {
         var url = string.Format("{0}/{1}", serverPath, uri);
 
-         var request = new UnityWebRequest(url, "POST");
+        var request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = Encoding.UTF8.GetBytes(data);
        
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -716,33 +689,31 @@ public class SIMS_Demo : MonoBehaviour
         
         request.SetRequestHeader("Content-Type", "application/json");
 
-          //응답을 기다립니다.
+        //응답을 기다립니다.
         yield return request.SendWebRequest();
 
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.Log("객체 Idx로 조회가 실패했습니다. " + request.responseCode);
-           
         }
         else
         {
             byte[] results = request.downloadHandler.data;
             var message = Encoding.UTF8.GetString(results);
-            Debug.Log(message);     //응답했다.
+            //Debug.Log(message);     //응답했다.
 
             InsTypeResponse ins = (InsTypeResponse)JsonUtility.FromJson<InsTypeResponse>(message);
             List<DamageTypeDto> list1 = new List<DamageTypeDto>(ins.data);
             
-            t_Dropdown = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>();
-            t_Dropdown.ClearOptions();
+            DdDamageType.ClearOptions();
             
             foreach (DamageTypeDto c in list1)
             {
                 Dropdown.OptionData option = new Dropdown.OptionData();
                 option.text = c.damage_name_en;
-                t_Dropdown.options.Add(option);
+                DdDamageType.options.Add(option);
             }
-            t_Dropdown.value=-1;
+            DdDamageType.value=-1;
         }
     }
 
@@ -768,7 +739,6 @@ public class SIMS_Demo : MonoBehaviour
             if (status != HttpStatusCode.OK)
             {
                 Debug.Log("모델 ID " + SingletonModelIdx.instance.ModelIdx + "이 조회에 실패했습니다. " + status);
-           
             }
             Stream respStream = resp.GetResponseStream();
             using (StreamReader sr = new StreamReader(respStream))
@@ -787,12 +757,11 @@ public class SIMS_Demo : MonoBehaviour
 
         byte[] msgByte = list[0].model_3dbytes;
 
-        string write_path = Application.persistentDataPath +"/"+ list[0].model_3dfile_name; 
+        string write_path = Application.persistentDataPath + "/" + list[0].model_3dfile_name; 
         
         // SimsLog(write_path);
         File.WriteAllBytes(write_path, msgByte);
 
-        Debug.Log(list[0].model_3dfile_name);
         StartCoroutine(LoadFromMemoryAsync(write_path, list[0].model_3dfile_name));
     }
 
@@ -804,8 +773,16 @@ public class SIMS_Demo : MonoBehaviour
         AssetBundle bundle = createRequest.assetBundle;
 
         var prefab = bundle.LoadAsset(object_name); //asset bundle에서 사용하고 싶은 object find
-        Transform points = GameObject.Find("StartModelPoint").GetComponent<Transform>();
-        Instantiate(prefab, points.position, points.rotation); //prefab instance화
+        Instantiate(prefab, StartModelPoint.position, StartModelPoint.rotation); //prefab instance화
+
+        Transform model = GameObject.Find(object_name + "(Clone)").transform;
+        Transform[] children = new Transform[model.childCount];
+
+        for(int i=0; i<model.childCount; i++)
+        {
+            children[i]=model.GetChild(i);
+            children[i].gameObject.SetActive(false);
+        }
     }
 
     public void OnQuit()
@@ -819,35 +796,28 @@ public class SIMS_Demo : MonoBehaviour
 
     public void Back()
     {
-       Transform back = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
-        back.gameObject.SetActive(false);
+        panel_Inspection.gameObject.SetActive(false);
     }
 
     private void On_List()
     {
-        Transform On_Panel = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_Panel");
-        On_Panel.gameObject.SetActive(true);
-        Transform On_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_on_btn");
-        On_btn.gameObject.SetActive(false);
-        Transform Off_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_off_btn");
-        Off_btn.gameObject.SetActive(true);
-
+        List_Panel.SetActive(true);
+        List_on_btn.gameObject.SetActive(false);
+        List_off_btn.gameObject.SetActive(true);
     }
 
-     public void Off_List()
+    public void Off_List()
     {
         int count = 0;
         for(int i=0; i<listCount; i++)
         {
-            Destroy(GameObject.Find("item"+count));
+            Destroy(GameObject.Find("item" + count));
             count++;
         }
-        Transform On_Panel = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_Panel");
-        On_Panel.gameObject.SetActive(false);
-        Transform On_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_on_btn");
-        On_btn.gameObject.SetActive(true);
-        Transform Off_btn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("List_off_btn");
-        Off_btn.gameObject.SetActive(false);
+
+        List_Panel.gameObject.SetActive(false);
+        List_on_btn.gameObject.SetActive(true);
+        List_off_btn.gameObject.SetActive(false);
     }
 }
 

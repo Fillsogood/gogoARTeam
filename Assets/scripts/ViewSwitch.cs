@@ -34,7 +34,6 @@ public class ViewSwitch : MonoBehaviour
         }
     }
 
-
     public void DisableExternalModel()
     {
         // FeedbackText.text = "Disable ";
@@ -42,7 +41,6 @@ public class ViewSwitch : MonoBehaviour
         {
             foreach (Transform child in currentbuilding.transform)
             {
-
                 if (child.gameObject.name == "external")
                 {
                     //  FeedbackText.text += "external ";
@@ -54,9 +52,6 @@ public class ViewSwitch : MonoBehaviour
                     //  FeedbackText.text += "rebar ";
                     child.gameObject.SetActive(true);
                 }
-
-
-
             }
         }
     }

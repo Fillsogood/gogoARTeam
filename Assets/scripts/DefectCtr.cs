@@ -3,14 +3,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
-using Microsoft.Azure.SpatialAnchors.Unity.Examples;
-
-namespace Microsoft.Azure.SpatialAnchors.Unity.Examples
-{
 
 public class DefectCtr : MonoBehaviour
 {
-    
+    public Transform panel_Inspection;
+    public Text txtGyroValue;
+    public InputField ifInsInspector;
+    public TMP_InputField ifinspector_etc;
+    public Dropdown DdSpace;
+    public Dropdown DdDamageObject;
+    public Dropdown DdDamageType;
+
     void Start()
     {
         Input.gyro.enabled=true;
@@ -25,42 +28,27 @@ public class DefectCtr : MonoBehaviour
         GameObject Defect = Instantiate(tmp);
 
         Defect.transform.position = Capsule.transform.position;
-      
     }
 
     public void OnPanel()
-    {         
-        Transform DefectSaveBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
-        DefectSaveBtn.gameObject.SetActive(true);
-        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("txtGyroValue").GetComponent<Text>().text=GyroScopeCtr.GetGyroData();
+    {
+        panel_Inspection.gameObject.SetActive(true);
+        txtGyroValue.text = GyroScopeCtr.GetGyroData();
     }
     
     public void OnSave()
     {
         ClearDataInspection();
-        Transform DefectSaveBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection");
-        DefectSaveBtn.gameObject.SetActive(false);
+        panel_Inspection.gameObject.SetActive(false);
         SaveDefect();
-
-        // GameObject ARStateText = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowText").gameObject;
-        // GameObject ARButton = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("CreateFlowButton").gameObject;
-        // GameObject DefectBtn = GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("DefectBtn").gameObject;
-        // ARStateText.SetActive(true);
-        // ARButton.SetActive(true);
-        // DefectBtn.SetActive(false);
-       
-       
     }
-     public void ClearDataInspection()
+
+    public void ClearDataInspection()
     {
-        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifInsInspector").GetComponent<InputField>().text = "";
-        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("ifinspector_etc").GetComponent<TMP_InputField>().text ="";
-        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageType").GetComponent<Dropdown>().value = 0;
-        GameObject.Find("UXParent").transform.Find("MobileUX").transform.Find("panel_Inspection").transform.Find("DdDamageObject").GetComponent<Dropdown>().value = 0;
-        //GameObject.Find("ifPicturePath").GetComponent<InputField>().text = "";
+        ifInsInspector.text = "";
+        ifinspector_etc.text ="";
+        DdSpace.value = 0;
+        DdDamageObject.value = 0;
+        DdDamageType.value = 0;
     }
-
-
-}
-
 }

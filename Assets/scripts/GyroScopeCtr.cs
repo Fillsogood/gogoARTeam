@@ -5,20 +5,24 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class GyroScopeCtr : MonoBehaviour
 {
-    GameObject Capsule;
-    Vector3 forceVec;
-    Rigidbody rb;
-    Text x;
-    Text y;
-    float speed=0.15f; 
-    bool isBorder;
-    bool isTri;
-    Transform xText;
-    Transform yText;
-    Transform panel;
-    Vector3 m_PlayerRot;
-    static double GyroRotY;
-    Text ARText;
+    private GameObject Capsule;
+    private Transform xText;
+    private Transform yText;
+
+    private Text x;
+    private Text y;
+    private Text ARText;
+
+    private Rigidbody rb;
+
+    private Vector3 forceVec;
+    private Vector3 m_PlayerRot;
+
+    private float speed = 0.15f; 
+    private static double GyroRotY;
+    
+    private bool isBorder;
+    private bool isTri;
 
     void Start()
     {
@@ -66,22 +70,7 @@ public class GyroScopeCtr : MonoBehaviour
             else if(average()>=-0.00394487800076604||average()<=0.00479192985221744 &&!isBorder)
             {
                 //멈추고 돌때...
-            }      
-
-            // if(isTri)
-            // {
-            //     panel = GameObject.Find("Canvas").transform.Find("DefectUpdateBtn");
-            //     panel.gameObject.SetActive(true);
-            //     if(Capsule.GetComponent<Rigidbody>()==null)
-            //     {
-            //         Capsule.AddComponent<Rigidbody>();   
-            //     }
-            //     else
-            //     {
-            //         rb = Capsule.GetComponent<Rigidbody>();
-            //         rb.freezeRotation =true;
-            //     }
-            // }
+            }
         }
         else
         {
@@ -111,7 +100,6 @@ public class GyroScopeCtr : MonoBehaviour
 		Capsule.transform.eulerAngles = m_PlayerRot;
         GyroRotY = m_PlayerRot.y;
 	}
-
 
     void AddRigidbody()
     {
